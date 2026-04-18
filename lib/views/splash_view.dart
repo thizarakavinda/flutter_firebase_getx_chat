@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
+import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
+// import 'package:get/get_core/src/get_main.dart';
+// import 'package:get/get_instance/get_instance.dart';
+// import 'package:get/route_manager.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -31,11 +36,98 @@ class _SplashViewState extends State<SplashView>
 
     _animationController.forward();
 
-    // _checkAuthAndNavigate();
+    //   _checkAuthAndNavigate();
+    // }
+
+    // void _checkAuthAndNavigate() async {
+    //   await Future.delayed(Duration(seconds: 2));
+
+    //   final authController = Get.put(AuthController(), permanent: true);
+
+    //   await Future.delayed(Duration(milliseconds: 500));
+
+    //   if (authController.isAuthenticated) {
+    //     Get.offAllNamed(AppRoutes.main);
+    //   } else {
+    //     Get.offAllNamed(AppRoutes.login);
+    //   }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: AppTheme.primaryColor,
+      body: Center(
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.chat_bubble_rounded,
+                        size: 60,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+
+                    SizedBox(height: 32),
+
+                    Text(
+                      "FluxChat",
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+
+                    SizedBox(height: 32),
+
+                    Text(
+                      "Connect with Friends Instantly",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+
+                    SizedBox(height: 64),
+
+                    CircularProgressIndicator( 
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
