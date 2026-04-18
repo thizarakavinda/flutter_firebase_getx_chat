@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase_getx_chat/firebase_options.dart';
 import 'package:get/get.dart';
 
+import 'theme/app_theme.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: "Chat App",
-      // theme: AppTheme.light,
+      theme: AppTheme.lightTheme,
       // initialRoute: AppPages.initial,
       // getPages: AppPahes.routes,
       debugShowCheckedModeBanner: false,
