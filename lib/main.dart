@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase_getx_chat/firebase_options.dart';
 import 'package:get/get.dart';
 
+import 'routes/app_pages.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
@@ -19,8 +20,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: "Chat App",
       theme: AppTheme.lightTheme,
-      // initialRoute: AppPages.initial,
-      // getPages: AppPahes.routes,
+      initialRoute: AppPages.initial,
+      getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
     );
   }
