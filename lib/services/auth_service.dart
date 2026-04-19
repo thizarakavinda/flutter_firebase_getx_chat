@@ -68,7 +68,7 @@ class AuthService {
     } catch (e) {
       throw Exception('Failed to send password reset email: ${e.toString()}');
     }
-  } 
+  }
 
   Future<void> signOut() async {
     try {

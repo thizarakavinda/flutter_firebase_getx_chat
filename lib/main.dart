@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_firebase_getx_chat/firebase_options.dart';
 import 'package:get/get.dart';
-
 import 'routes/app_pages.dart';
 import 'theme/app_theme.dart';
 
