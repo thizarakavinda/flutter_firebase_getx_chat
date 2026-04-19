@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/services/auth_service.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 
 class ForgotPasswordController extends GetxController {
   final AuthService _authService = AuthService();
