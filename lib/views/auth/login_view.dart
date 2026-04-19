@@ -178,7 +178,16 @@ class _LoginViewState extends State<LoginView> {
                           EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                      onPressed: _authController.isLoading ? null : () {},
+                      onPressed: _authController.isLoading
+                          ? null
+                          : () {
+                              if (_formkey.currentState?.validate() ?? false) {
+                                _authController.signInWithEmailAndPassword(
+                                  _emailController.text.trim(),
+                                  _passwordController.text.trim(),
+                                );
+                              }
+                            },
                       child: _authController.isLoading
                           ? SizedBox(
                               height: 20,

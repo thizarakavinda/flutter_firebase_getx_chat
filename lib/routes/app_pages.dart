@@ -1,7 +1,7 @@
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:get/get.dart';
 
-import '../views/auth/login_splash.dart';
+import '../views/auth/login_view.dart';
 import '../views/splash_view.dart';
 
 class AppPages {
