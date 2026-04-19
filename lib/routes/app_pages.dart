@@ -1,6 +1,7 @@
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:get/get.dart';
 
+import '../views/auth/login_splash.dart';
 import '../views/splash_view.dart';
 
 class AppPages {
@@ -8,7 +9,7 @@ class AppPages {
 
   static final routes = [
     GetPage(name: AppRoutes.splash, page: () => const SplashView()),
-    // GetPage(name: AppRoutes.login, page: () => const LoginView()),
+    GetPage(name: AppRoutes.login, page: () => const LoginView()),
     // GetPage(name: AppRoutes.register, page: () => const RegisterView()),
 
     // GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordView()),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
+import 'package:get/get.dart';
+
+import '../controllers/auth_controller.dart';
+import '../routes/app_routes.dart';
 // import 'package:get/get_core/src/get_main.dart';
 // import 'package:get/get_instance/get_instance.dart';
 // import 'package:get/route_manager.dart';
@@ -36,21 +40,21 @@ class _SplashViewState extends State<SplashView>
 
     _animationController.forward();
 
-    //   _checkAuthAndNavigate();
-    // }
+      _checkAuthAndNavigate();
+    }
 
-    // void _checkAuthAndNavigate() async {
-    //   await Future.delayed(Duration(seconds: 2));
+    void _checkAuthAndNavigate() async {
+      await Future.delayed(Duration(seconds: 2));
 
-    //   final authController = Get.put(AuthController(), permanent: true);
+      final authController = Get.put(AuthController(), permanent: true);
 
-    //   await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 500));
 
-    //   if (authController.isAuthenticated) {
-    //     Get.offAllNamed(AppRoutes.main);
-    //   } else {
-    //     Get.offAllNamed(AppRoutes.login);
-    //   }
+      if (authController.isAuthenticated) {
+        Get.offAllNamed(AppRoutes.main);
+      } else {
+        Get.offAllNamed(AppRoutes.login);
+      }
   }
 
   @override
