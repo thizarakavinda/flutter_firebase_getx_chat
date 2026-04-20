@@ -14,7 +14,10 @@ class FirestoreService {
 
   Future<UserModel?> getUserById(String userId) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .get();
       if (doc.exists) {
         return UserModel.fromMap(doc.data() as Map<String, dynamic>);
       }
@@ -26,14 +29,15 @@ class FirestoreService {
 
   Future<void> updateUserOnlineStatus(String userId, bool isOnline) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
+      DocumentSnapshot doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .get();
       if (doc.exists) {
-        await _firestore.collection('users').doc(userId).update(
-          {
-            'isOnline': isOnline,
-            'lastSeen': DateTime.now().microsecondsSinceEpoch,
-          },
-        );
+        await _firestore.collection('users').doc(userId).update({
+          'isOnline': isOnline,
+          'lastSeen': DateTime.now().microsecondsSinceEpoch,
+        });
       }
     } catch (e) {
       throw Exception('Failed to Update Online Status: ${e.toString()}');
@@ -47,4 +51,14 @@ class FirestoreService {
       throw Exception('Failed to Delete User: ${e.toString()}');
     }
   }
+
+  Stream<UserModel?> getUserStream(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .snapshots()
+        .map((doc) => doc.exists ? UserModel.fromMap(doc.data()!) : null);
+  }
+
+  
 }

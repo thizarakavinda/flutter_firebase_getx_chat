@@ -34,5 +34,11 @@ class ProfileController extends GetxController{
     super.onClose();
   }
 
-  void _loadUserData(){}
+  void _loadUserData(){
+    final currentUserId = _authController.user?.uid;
+
+    if(currentUserId != null){
+      _currentUser.bindStream(_firestoreService.getUserStream(currentUserId));
+    }
+  }
 }
