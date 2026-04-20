@@ -3,6 +3,7 @@ import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
+import 'package:logger/web.dart';
 
 class ProfileController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -60,5 +61,27 @@ class ProfileController extends GetxController {
     }
   }
 
-  
+  Future<void> updateProfile() async {
+    try {
+      _isLoading.value = true;
+      _error.value = '';
+
+      final user = _currentUser.value;
+      if (user == null) return;
+
+      final updateUser = user.copyWith(
+        displayName: displayNameController.text.trim(),
+      );
+
+      await _firestoreService.updateUser(updateUser);
+      _isEditing.value = false;
+      Get.snackbar('Success', 'Profile updated successfully');
+    } catch (e) {
+      _error.value = e.toString();
+      Logger().e('Failed to Update Profile: ${e.toString()}');
+      Get.snackbar('Error', 'Failed to update profile');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 }
