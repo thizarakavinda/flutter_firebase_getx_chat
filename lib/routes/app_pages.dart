@@ -1,6 +1,8 @@
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
+import 'package:flutter_firebase_getx_chat/views/profile_view.dart';
 import 'package:get/get.dart';
 
+import '../controllers/profile_controller.dart';
 import '../views/auth/forgot_password_view.dart';
 import '../views/auth/login_view.dart';
 import '../views/auth/register_view.dart';
@@ -18,6 +20,7 @@ class AppPages {
       name: AppRoutes.forgotPassword,
       page: () => const ForgotPasswordView(),
     ),
+
     // GetPage(name: AppRoutes.changePassword, page: () => const ChangePasswordView()),
 
     // GetPage(name: AppRoutes.home, page: () => const HomeView(), bindings: BindingsBuilder((){
@@ -25,9 +28,13 @@ class AppPages {
 
     // GetPage(name: AppRoutes.main, page: () => const MainView(), bindings: BindingsBuilder((){
     // Get.put(MainController());})),
-
-    // GetPage(name: AppRoutes.profile, page: () => const ProfileView(), bindings: BindingsBuilder((){
-    // Get.put(ProfileController());})),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfileView(),
+      binding: BindingsBuilder(() {
+        Get.put(ProfileController());
+      }),
+    ),
 
     // GetPage(name: AppRoutes.chat, page: () => const ChatView(), bindings: BindingsBuilder((){
     // Get.put(ChatController());})),

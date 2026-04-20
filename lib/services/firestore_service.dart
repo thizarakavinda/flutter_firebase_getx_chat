@@ -67,6 +67,4 @@ class FirestoreService {
       throw Exception('Failed to Update User');
     }
   }
-
-  
 }
