@@ -128,5 +128,30 @@ class ProfileController extends GetxController {
     }
   }
 
-  
+  String getJoinedData() {
+    final user = _currentUser.value;
+    if (user == null) return '';
+    final date = user.createdAt;
+
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    return 'Joined ${months[date.month - 1]} ${date.year}';
+  }
+
+  void clearError() {
+    _error.value = '';
+  }
 }
