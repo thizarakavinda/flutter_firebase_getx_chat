@@ -3,7 +3,6 @@ import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class ProfileController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -48,4 +47,18 @@ class ProfileController extends GetxController {
       });
     }
   }
+
+  void toggleEditing() {
+    _isEditing.value = !_isEditing.value;
+
+    if (!_isEditing.value) {
+      final user = _currentUser.value;
+      if (user != null) {
+        displayNameController.text = user.displayName;
+        emailController.text = user.email;
+      }
+    }
+  }
+
+  
 }
