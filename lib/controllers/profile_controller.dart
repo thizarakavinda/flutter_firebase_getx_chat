@@ -5,7 +5,7 @@ import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 
-class ProfileController extends GetxController{
+class ProfileController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
   final AuthController _authController = Get.find<AuthController>();
   final TextEditingController displayNameController = TextEditingController();
@@ -34,11 +34,18 @@ class ProfileController extends GetxController{
     super.onClose();
   }
 
-  void _loadUserData(){
+  void _loadUserData() {
     final currentUserId = _authController.user?.uid;
 
-    if(currentUserId != null){
+    if (currentUserId != null) {
       _currentUser.bindStream(_firestoreService.getUserStream(currentUserId));
+
+      ever(_currentUser, (UserModel? user) {
+        if (user != null) {
+          displayNameController.text = user.displayName;
+          emailController.text = user.email;
+        }
+      });
     }
   }
 }
