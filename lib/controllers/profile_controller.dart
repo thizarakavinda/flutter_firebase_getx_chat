@@ -75,13 +75,58 @@ class ProfileController extends GetxController {
 
       await _firestoreService.updateUser(updateUser);
       _isEditing.value = false;
-      Get.snackbar('Success', 'Profile updated successfully');
+      Get.snackbar('Success', 'Profile Updated Successfully');
     } catch (e) {
       _error.value = e.toString();
       Logger().e('Failed to Update Profile: ${e.toString()}');
-      Get.snackbar('Error', 'Failed to update profile');
+      Get.snackbar('Error', 'Failed to Update Profile');
     } finally {
       _isLoading.value = false;
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      await _authController.signOut();
+    } catch (e) {
+      Logger().e('Failed to Sign Out: ${e.toString()}');
+      Get.snackbar('Error', 'Failed to Sign Out');
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      final result = await Get.dialog<bool>(
+        AlertDialog(
+          title: Text('Delete Account'),
+          content: Text(
+            'Are you sure you want to delete your account? This action cannot be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+              child: Text('Delete', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        _isLoading.value = true;
+        await _authController.deleteAccount();
+      }
+    } catch (e) {
+      Logger().e('Failed to Delete Account: ${e.toString()}');
+      Get.snackbar('Error', 'Failed to Delete Account');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  
 }
