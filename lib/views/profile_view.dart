@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/profile_controller.dart';
 import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
 import 'package:get/get.dart';
+import 'package:logger/web.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
@@ -37,6 +38,7 @@ class ProfileView extends GetView<ProfileController> {
       body: Obx(() {
         final user = controller.currentUser;
         if (user == null) {
+          Logger().e('User data is null');
           return Center(
             child: CircularProgressIndicator(color: AppTheme.primaryColor),
           );
@@ -159,6 +161,90 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 ],
+              ),
+
+              SizedBox(height: 32),
+
+              Obx(
+                () => Card(
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Personal Information',
+                          style: Theme.of(Get.context!).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        TextField(
+                          style: TextStyle(fontSize: 14),
+                          enabled: controller.isEditing,
+                          controller: controller.displayNameController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 14),
+                            labelText: 'Name',
+                            prefixIcon: Icon(Icons.person_2_outlined, size: 23),
+                            labelStyle: TextStyle(
+                              color: AppTheme.textSecondaryColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 16),
+
+                        TextField(
+                          style: TextStyle(fontSize: 14),
+                          enabled: false,
+                          controller: controller.emailController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 14),
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email_outlined, size: 23),
+                            labelStyle: TextStyle(
+                              color: AppTheme.textSecondaryColor,
+                              fontSize: 14,
+                            ),
+                            helperText: 'Email cannot be changed',
+                          ),
+                        ),
+
+                        if (controller.isEditing) ...[
+                          SizedBox(height: 20),
+
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 14),
+                              ),
+                              onPressed: controller.isLoading
+                                  ? null
+                                  : controller.updateProfile,
+                              child: controller.isLoading 
+                                  ? SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Text('Save Changes'),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

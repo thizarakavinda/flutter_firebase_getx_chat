@@ -19,6 +19,12 @@ class UserModel {
     required this.createdAt,
   });
 
+  static DateTime _toDateTime(dynamic value) {
+    if (value is Timestamp) return value.toDate();
+    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    return DateTime.now();
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -26,8 +32,8 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'isOnline': isOnline,
-      'lastSeen': lastSeen,
-      'createdAt': createdAt,
+      'lastSeen': Timestamp.fromDate(lastSeen),
+      'createdAt': Timestamp.fromDate(createdAt),
     };
   }
 
@@ -38,12 +44,8 @@ class UserModel {
       displayName: map['displayName'] ?? "",
       photoUrl: map['photoUrl'] ?? "",
       isOnline: map['isOnline'] ?? false,
-      lastSeen: map['lastSeen'] != null
-          ? (map['lastSeen'] as Timestamp).toDate()
-          : DateTime.now(),
-      createdAt: map['createdAt'] != null
-          ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+      lastSeen: _toDateTime(map['lastSeen']),
+      createdAt: _toDateTime(map['createdAt']),
     );
   }
 
