@@ -21,7 +21,10 @@ class UserModel {
 
   static DateTime _toDateTime(dynamic value) {
     if (value is Timestamp) return value.toDate();
-    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    if (value is int)
+      return DateTime.fromMicrosecondsSinceEpoch(
+        value ~/ 1000,
+      ); // nanoseconds → microseconds
     return DateTime.now();
   }
 

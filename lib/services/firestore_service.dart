@@ -36,7 +36,7 @@ class FirestoreService {
       if (doc.exists) {
         await _firestore.collection('users').doc(userId).update({
           'isOnline': isOnline,
-          'lastSeen': DateTime.now().microsecondsSinceEpoch,
+          'lastSeen': Timestamp.fromDate(DateTime.now()), // ✅ was saving int
         });
       }
     } catch (e) {
@@ -64,7 +64,9 @@ class FirestoreService {
     try {
       await _firestore.collection('users').doc(user.id).update(user.toMap());
     } catch (e) {
-      throw Exception('Failed to Update User');
+      throw Exception(
+        'Failed to Update User: ${e.toString()}',
+      ); // ✅ now shows real error
     }
   }
 }

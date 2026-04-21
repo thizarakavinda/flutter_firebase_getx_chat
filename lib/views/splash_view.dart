@@ -60,8 +60,8 @@ class _SplashViewState extends State<SplashView>
 
   @override
   void dispose() {
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   @override

@@ -29,8 +29,8 @@ class ProfileController extends GetxController {
 
   @override
   void onClose() {
-    displayNameController.dispose();
-    emailController.dispose();
+    // displayNameController.dispose();
+    // emailController.dispose();
     super.onClose();
   }
 
