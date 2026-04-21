@@ -24,34 +24,34 @@ class AuthController extends GetxController {
   void onInit() {
     super.onInit();
     _user.bindStream(_authService.authStateChange);
-    ever(_user, _handleAuthStateChanged);
+    // ever(_user, _handleAuthStateChanged);
   }
 
-  void _handleAuthStateChanged(User? user) async {
-    if (user == null) {
-      if (Get.currentRoute != AppRoutes.login) {
-        Get.offAllNamed(AppRoutes.login);
-      }
-    } else {
-      if (Get.currentRoute != AppRoutes.profile) {
-        Get.offAllNamed(AppRoutes.profile);
-      }
-    }
-    if (!_isInitialized.value) {
-      _isInitialized.value = true;
-    }
-  }
+  // void _handleAuthStateChanged(User? user) async {
+  //   if (user == null) {
+  //     if (Get.currentRoute != AppRoutes.login) {
+  //       Get.offAllNamed(AppRoutes.login);
+  //     }
+  //   } else {
+  //     if (Get.currentRoute != AppRoutes.profile) {
+  //       Get.offAllNamed(AppRoutes.profile);
+  //     }
+  //   }
+  //   if (!_isInitialized.value) {
+  //     _isInitialized.value = true;
+  //   }
+  // }
 
-  void checkInitialAuthState() {
-    final currentUser = _authService.currentUser;
-    if (currentUser != null) {
-      _user.value = currentUser;
-      Get.offAllNamed(AppRoutes.main);
-    } else {
-      Get.offAllNamed(AppRoutes.login);
-    }
-    _isInitialized.value = true;
-  }
+  // void checkInitialAuthState() {
+  //   final currentUser = _authService.currentUser;
+  //   if (currentUser != null) {
+  //     _user.value = currentUser;
+  //     Get.offAllNamed(AppRoutes.main);
+  //   } else {
+  //     Get.offAllNamed(AppRoutes.login);
+  //   }
+  //   _isInitialized.value = true;
+  // }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {

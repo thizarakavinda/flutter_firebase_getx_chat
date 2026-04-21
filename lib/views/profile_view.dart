@@ -277,7 +277,7 @@ class ProfileView extends GetView<ProfileController> {
                         onTap: () => Get.toNamed('/change-password'),
                       ),
 
-                      Divider(height: 1, color: Colors.grey),
+                      Divider(height: 1, color: Colors.grey.shade400),
 
                       ListTile(
                         leading: Icon(
@@ -289,7 +289,7 @@ class ProfileView extends GetView<ProfileController> {
                         onTap: controller.deleteAccount,
                       ),
 
-                      Divider(height: 1, color: Colors.grey),
+                      Divider(height: 1, color: Colors.grey.shade400),
 
                       ListTile(
                         leading: Icon(
