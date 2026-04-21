@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
+import 'package:logger/logger.dart';
 
 class ChangePasswordController extends GetxController {
   final _authController = Get.find<AuthController>();
@@ -43,5 +47,79 @@ class ChangePasswordController extends GetxController {
 
   void toggleConfirmPasswordVisibility() {
     _obscureConfirmPassword.value = !_obscureConfirmPassword.value;
+  }
+
+  Future<void> changePassword() async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      _isLoading.value = true;
+      _error.value = '';
+
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        throw Exception('No authenticated user found');
+      }
+
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPasswordController.text,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      await user.updatePassword(newPasswordController.text);
+
+      Get.snackbar(
+        'Success',
+        'Password changed successfully',
+        backgroundColor: Colors.green.withOpacity(0.1),
+        colorText: Colors.green,
+        duration: Duration(seconds: 3),
+      );
+
+      currentPasswordController.clear();
+      newPasswordController.clear();
+      confirmPasswordController.clear();
+
+      Get.back();
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'wrong-password':
+          errorMessage = 'Current password is incorrect';
+          break;
+        case 'weak-password':
+          errorMessage = 'New password is too weak';
+          break;
+        case 'requires-recent-login':
+          errorMessage =
+              'Please log out and log back in to change your password';
+          break;
+        default:
+          errorMessage = 'Failed to change password';
+      }
+      _error.value = errorMessage;
+      Get.snackbar(
+        'Error',
+        errorMessage,
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+        duration: Duration(seconds: 4),
+      );
+    } catch (e) {
+      _error.value = 'An unexpected error occurred';
+      Logger().e('Failed to Change Password: ${e.toString()}');
+      Get.snackbar(
+        'Error',
+        _error.value,
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+        duration: Duration(seconds: 4),
+      );
+    } finally {
+      _isLoading.value = false;
+    }
   }
 }
