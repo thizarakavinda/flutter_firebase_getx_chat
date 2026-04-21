@@ -286,7 +286,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         title: Text('Delete Account'),
                         trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () => controller.deleteAccount,
+                        onTap: controller.deleteAccount,
                       ),
 
                       Divider(height: 1, color: Colors.grey),
@@ -298,7 +298,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         title: Text('Sign Out'),
                         trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () => controller.signOut,
+                        onTap: controller.signOut,
                       ),
                     ],
                   ),
