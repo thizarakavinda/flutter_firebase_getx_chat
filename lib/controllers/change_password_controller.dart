@@ -122,4 +122,40 @@ class ChangePasswordController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  String? validateCurrentPassword(String? value) {
+    if (value?.isEmpty ?? true) {
+      return 'Please enter your current password';
+    }
+    return null;
+  }
+
+  String? validateNewPassword(String? value) {
+    if (value?.isEmpty ?? true) {
+      return 'Please enter a new password';
+    }
+    if (value!.length < 6) {
+      return 'New password must be at least 6 characters';
+    }
+    if (value == currentPasswordController.text) {
+      return 'New password cannot be the same as current password';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value?.isEmpty ?? true) {
+      return 'Please confirm your new password';
+    }
+
+    if (value != newPasswordController.text) {
+      return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
+  void clearError() {
+    _error.value = '';
+  }
 }
