@@ -1,11 +1,13 @@
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
-import 'package:flutter_firebase_getx_chat/views/profile_view.dart';
+import 'package:flutter_firebase_getx_chat/views/profile/profile_view.dart';
 import 'package:get/get.dart';
 
+import '../controllers/change_password_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../views/auth/forgot_password_view.dart';
 import '../views/auth/login_view.dart';
 import '../views/auth/register_view.dart';
+import '../views/profile/change_password_view.dart';
 import '../views/splash_view.dart';
 
 class AppPages {
@@ -21,7 +23,13 @@ class AppPages {
       page: () => const ForgotPasswordView(),
     ),
 
-    // GetPage(name: AppRoutes.changePassword, page: () => const ChangePasswordView()),
+    GetPage(
+      name: AppRoutes.changePassword,
+      page: () => const ChangePasswordView(),
+      binding: BindingsBuilder(() {
+        Get.put(ChangePasswordController());
+      }),
+    ),
 
     // GetPage(name: AppRoutes.home, page: () => const HomeView(), bindings: BindingsBuilder((){
     // Get.put(HomeController());})),

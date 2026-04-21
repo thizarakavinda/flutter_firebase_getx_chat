@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/profile_controller.dart';
+import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:logger/web.dart';
@@ -274,7 +275,7 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                         title: Text('Change Password'),
                         trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () => Get.toNamed('/change-password'),
+                        onTap: () => Get.toNamed(AppRoutes.changePassword),
                       ),
 
                       Divider(height: 1, color: Colors.grey.shade400),
