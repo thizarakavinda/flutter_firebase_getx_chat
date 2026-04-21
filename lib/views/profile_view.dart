@@ -261,6 +261,57 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 ),
+
+                SizedBox(height: 32),
+
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(
+                          Icons.security,
+                          color: AppTheme.primaryColor,
+                        ),
+                        title: Text('Change Password'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () => Get.toNamed('/change-password'),
+                      ),
+
+                      Divider(height: 1, color: Colors.grey),
+
+                      ListTile(
+                        leading: Icon(
+                          Icons.delete_outline,
+                          color: AppTheme.errorColor,
+                        ),
+                        title: Text('Delete Account'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () => controller.deleteAccount,
+                      ),
+
+                      Divider(height: 1, color: Colors.grey),
+
+                      ListTile(
+                        leading: Icon(
+                          Icons.logout_outlined,
+                          color: AppTheme.errorColor,
+                        ),
+                        title: Text('Sign Out'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () => controller.signOut,
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                Text(
+                  'FluxChat v1.0.0',
+                  style: Theme.of(Get.context!).textTheme.bodySmall?.copyWith(
+                    color: AppTheme.textSecondaryColor,
+                  ),
+                ),
               ],
             ),
           );
