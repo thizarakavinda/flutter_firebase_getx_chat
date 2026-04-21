@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -71,23 +70,24 @@ class ChangePasswordController extends GetxController {
 
       await user.updatePassword(newPasswordController.text);
 
+      _authController.signOut();
+
       Get.snackbar(
-        'Success',
-        'Password changed successfully',
+        'Successfully Changed',
+        'Your password has been changed. Please log in again.',
         backgroundColor: Colors.green.withOpacity(0.1),
         colorText: Colors.green,
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: 4),
       );
 
       currentPasswordController.clear();
       newPasswordController.clear();
       confirmPasswordController.clear();
-
-      Get.back();
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
         case 'wrong-password':
+        case 'invalid-credential':
           errorMessage = 'Current password is incorrect';
           break;
         case 'weak-password':
