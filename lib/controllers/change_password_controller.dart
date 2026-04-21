@@ -32,4 +32,16 @@ class ChangePasswordController extends GetxController {
     confirmPasswordController.dispose();
     super.onClose();
   }
+
+  void toggleCurrentPasswordVisibility() {
+    _obscureCurrentPassword.value = !_obscureCurrentPassword.value;
+  }
+
+  void toggleNewPasswordVisibility() {
+    _obscureNewPassword.value = !_obscureNewPassword.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    _obscureConfirmPassword.value = !_obscureConfirmPassword.value;
+  }
 }
