@@ -24,4 +24,24 @@ class ChatModel {
     required this.createdAt,
     required this.updatedAt,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'participants': participants,
+      'lastMessage': lastMessage,
+      'lastMessageTime': lastMessageTime?.millisecondsSinceEpoch,
+      'lastMessageSenderId': lastMessageSenderId,
+      'unreadCount': unreadCount,
+      'deletedBy': deletedBy,
+      'deletedAt': deletedAt.map(
+        (key, value) => MapEntry(key, value?.millisecondsSinceEpoch),
+      ),
+      'lastSeenBy': lastSeenBy.map(
+        (key, value) => MapEntry(key, value?.millisecondsSinceEpoch),
+      ),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+    };
+  }
 }
