@@ -44,4 +44,50 @@ class ChatModel {
       'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
+
+  static ChatModel fromMap(Map<String, dynamic> map) {
+    Map<String, DateTime?> lastSeenMap = {};
+    if (map['lastSeenBy'] != null) {
+      Map<String, dynamic> rawLastSeenBy = Map<String, dynamic>.from(
+        map['lastSeenBy'],
+      );
+
+      lastSeenMap = rawLastSeenBy.map(
+        (key, value) => MapEntry(
+          key,
+          value != null ? DateTime.fromMillisecondsSinceEpoch(value) : null,
+        ),
+      );
+    }
+
+    Map<String, DateTime?> deletedAtMap = {};
+    if (map['deletedAt'] != null) {
+      Map<String, dynamic> rawDeletedAt = Map<String, dynamic>.from(
+        map['deletedAt'],
+      );
+
+      deletedAtMap = rawDeletedAt.map(
+        (key, value) => MapEntry(
+          key,
+          value != null ? DateTime.fromMillisecondsSinceEpoch(value) : null,
+        ),
+      );
+    }
+
+    return ChatModel(
+      id: map['id'],
+      participants: List<String>.from(map['participants']),
+      lastMessage: map['lastMessage'],
+      lastMessageTime: map['lastMessageTime'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastMessageTime'])
+          : null,
+      lastMessageSenderId: map['lastMessageSenderId'],
+      unreadCount: Map<String, int>.from(map['unreadCount']),
+      deletedBy: Map<Map, String>.from(map['deletedBy'] ?? {}),
+      deletedAt: deletedAtMap,
+      lastSeenBy: lastSeenMap,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt']),
+    );
+  }
 }
