@@ -97,4 +97,8 @@ class ChatModel {
       orElse: () => '',
     );
   }
+
+  int getUnreadCount(String userId) {
+    return unreadCount[userId] ?? 0;
+  }
 }
