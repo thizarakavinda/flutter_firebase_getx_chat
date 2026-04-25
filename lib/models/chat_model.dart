@@ -150,19 +150,13 @@ class ChatModel {
   }
 
   bool isMessageSeen(String currentUserId, String otherUserId) {
-    if (lastSeenBy.isEmpty || lastMessageSenderId == null) {
-      return false;
-    }
-
     if (lastMessageSenderId == currentUserId) {
-      return true;
+      final otherUserLastSeen = getLastSeenBy(otherUserId);
+      if (otherUserLastSeen != null && lastMessageTime != null) {
+        return otherUserLastSeen.isAfter(lastMessageTime!) ||
+            otherUserLastSeen.isAtSameMomentAs(lastMessageTime!);
+      }
     }
-
-    DateTime? lastSeen = getLastSeenBy(otherUserId);
-    if (lastSeen == null || lastMessageTime == null) {
-      return false;
-    }
-
-    return lastSeen.isAfter(lastMessageTime!);
+    return false;
   }
 }
