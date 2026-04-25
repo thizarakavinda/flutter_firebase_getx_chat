@@ -5,7 +5,7 @@ class ChatModel {
   final DateTime? lastMessageTime;
   final String? lastMessageSenderId;
   final Map<String, int> unreadCount;
-  final Map<Map, String> deletedBy;
+  final Map<String, bool> deletedBy;
   final Map<String, DateTime?> deletedAt;
   final Map<String, DateTime?> lastSeenBy;
   final DateTime createdAt;
@@ -48,11 +48,11 @@ class ChatModel {
   static ChatModel fromMap(Map<String, dynamic> map) {
     Map<String, DateTime?> lastSeenMap = {};
     if (map['lastSeenBy'] != null) {
-      Map<String, dynamic> rawLastSeenBy = Map<String, dynamic>.from(
+      Map<String, dynamic> rawLastSeen = Map<String, dynamic>.from(
         map['lastSeenBy'],
       );
 
-      lastSeenMap = rawLastSeenBy.map(
+      lastSeenMap = rawLastSeen.map(
         (key, value) => MapEntry(
           key,
           value != null ? DateTime.fromMillisecondsSinceEpoch(value) : null,
@@ -75,15 +75,15 @@ class ChatModel {
     }
 
     return ChatModel(
-      id: map['id'],
-      participants: List<String>.from(map['participants']),
+      id: map['id'] ?? '',
+      participants: List<String>.from(map['participants'] ?? []),
       lastMessage: map['lastMessage'],
       lastMessageTime: map['lastMessageTime'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['lastMessageTime'])
           : null,
       lastMessageSenderId: map['lastMessageSenderId'],
-      unreadCount: Map<String, int>.from(map['unreadCount']),
-      deletedBy: Map<Map, String>.from(map['deletedBy'] ?? {}),
+      unreadCount: Map<String, int>.from(map['unreadCount'] ?? {}),
+      deletedBy: Map<String, bool>.from(map['deletedBy'] ?? {}),
       deletedAt: deletedAtMap,
       lastSeenBy: lastSeenMap,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
@@ -98,7 +98,71 @@ class ChatModel {
     );
   }
 
+  ChatModel copyWith({
+    String? id,
+    List<String>? participants,
+    String? lastMessage,
+    DateTime? lastMessageTime,
+    String? lastMessageSenderId,
+    Map<String, int>? unreadCount,
+    Map<String, bool>? deletedBy,
+    Map<String, DateTime?>? deletedAt,
+    Map<String, DateTime?>? lastSeenBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ChatModel(
+      id: id ?? this.id,
+      participants: participants ?? this.participants,
+      lastMessage: lastMessage ?? this.lastMessage,
+      lastMessageTime: lastMessageTime ?? this.lastMessageTime,
+      lastMessageSenderId: lastMessageSenderId ?? this.lastMessageSenderId,
+      unreadCount: unreadCount ?? this.unreadCount,
+      deletedBy: deletedBy ?? this.deletedBy,
+      deletedAt: deletedAt ?? this.deletedAt,
+      lastSeenBy: lastSeenBy ?? this.lastSeenBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  String getOtherParticipant(String currentUserId) {
+    return participants.firstWhere(
+      (id) => id != currentUserId,
+      orElse: () => '',
+    );
+  }
+
   int getUnreadCount(String userId) {
     return unreadCount[userId] ?? 0;
+  }
+
+  bool isDeletedBy(String userId) {
+    return deletedBy[userId] ?? false;
+  }
+
+  DateTime? getDeletedAt(String userId) {
+    return deletedAt[userId];
+  }
+
+  DateTime? getLastSeenBy(String userId) {
+    return lastSeenBy[userId];
+  }
+
+  bool isMessageSeen(String currentUserId, String otherUserId) {
+    if (lastSeenBy.isEmpty || lastMessageSenderId == null) {
+      return false;
+    }
+
+    if (lastMessageSenderId == currentUserId) {
+      return true;
+    }
+
+    DateTime? lastSeen = getLastSeenBy(otherUserId);
+    if (lastSeen == null || lastMessageTime == null) {
+      return false;
+    }
+
+    return lastSeen.isAfter(lastMessageTime!);
   }
 }
