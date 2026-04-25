@@ -90,4 +90,11 @@ class ChatModel {
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt']),
     );
   }
+
+  String getOtherParticipantId(String currentUserId) {
+    return participants.firstWhere(
+      (id) => id != currentUserId,
+      orElse: () => '',
+    );
+  }
 }
