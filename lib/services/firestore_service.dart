@@ -64,9 +64,18 @@ class FirestoreService {
     try {
       await _firestore.collection('users').doc(user.id).update(user.toMap());
     } catch (e) {
-      throw Exception(
-        'Failed to Update User: ${e.toString()}',
-      ); // ✅ now shows real error
+      throw Exception('Failed to Update User: ${e.toString()}');
     }
+  }
+
+  Stream<List<UserModel>> getAllUserStream() {
+    return _firestore
+        .collection('users')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => UserModel.fromMap(doc.data()))
+              .toList(),
+        );
   }
 }
