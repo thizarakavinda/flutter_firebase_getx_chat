@@ -91,19 +91,43 @@ class FirestoreService {
       throw Exception('Failed to Send Friend Request: ${e.toString()}');
     }
 
-    String notificationId = 'friend_request_${request.senderId}_${request.receiverId}_${DateTime.now().millisecondsSinceEpoch}';
+    String notificationId =
+        'friend_request_${request.senderId}_${request.receiverId}_${DateTime.now().millisecondsSinceEpoch}';
 
-    await createNotification(NotificationModel(
-      id: notificationId,
-      userId: request.receiverId,
-      title: 'New Friend Request',
-      body: 'You have recieved a new friend request',
-      type: NotificationType.friendRequest,
-      data: {
-        'senderId': request.senderId,
-        'receiverId': request.id,
-      },
-      createdAt: DateTime.now(),
-    ));
+    await createNotification(
+      NotificationModel(
+        id: notificationId,
+        userId: request.receiverId,
+        title: 'New Friend Request',
+        body: 'You have recieved a new friend request',
+        type: NotificationType.friendRequest,
+        data: {'senderId': request.senderId, 'receiverId': request.id},
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> cancelFriendRequest(String requestId) async {
+    try {
+      DocumentSnapshot requestDoc = await _firestore
+          .collection('friendRequests')
+          .doc(requestId)
+          .get();
+
+      if (requestDoc.exists) {
+        FriendRequestModel request = FriendRequestModel.fromMap(
+          requestDoc.data() as Map<String, dynamic>,
+        );
+        await _firestore.collection('friendRequests').doc(requestId).delete();
+
+        await deleteNotificationByTypeAndUser(
+          request.receiverId,
+          NotificationType.friendRequest,
+          request.senderId,
+        );
+      }
+    } catch (e) {
+      throw Exception('Failed to Cancel Friend Request: ${e.toString()}');
+    }
   }
 }
