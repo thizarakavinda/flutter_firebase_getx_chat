@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
+import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
 import '../models/user_model.dart';
 
 class FirestoreService {
@@ -77,5 +79,31 @@ class FirestoreService {
               .map((doc) => UserModel.fromMap(doc.data()))
               .toList(),
         );
+  }
+
+  Future<void> sendFriendRequest(FriendRequestModel request) async {
+    try {
+      await _firestore
+          .collection('friendRequests')
+          .doc(request.id)
+          .set(request.toMap());
+    } catch (e) {
+      throw Exception('Failed to Send Friend Request: ${e.toString()}');
+    }
+
+    String notificationId = 'friend_request_${request.senderId}_${request.receiverId}_${DateTime.now().millisecondsSinceEpoch}';
+
+    await createNotification(NotificationModel(
+      id: notificationId,
+      userId: request.receiverId,
+      title: 'New Friend Request',
+      body: 'You have recieved a new friend request',
+      type: NotificationType.friendRequest,
+      data: {
+        'senderId': request.senderId,
+        'receiverId': request.id,
+      },
+      createdAt: DateTime.now(),
+    ));
   }
 }
