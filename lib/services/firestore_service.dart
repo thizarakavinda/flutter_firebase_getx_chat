@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
@@ -128,6 +130,47 @@ class FirestoreService {
       }
     } catch (e) {
       throw Exception('Failed to Cancel Friend Request: ${e.toString()}');
+    }
+  }
+
+  Future<void> respondToFriendRequest(
+    String requestId,
+    FriendRequestStatus status,
+  ) async {
+    try {
+      await _firestore.collection('friendRequests').doc(requestId).update({
+        'status': status.name,
+        'respondedAt': DateTime.now().millisecondsSinceEpoch,
+      });
+
+      DocumentSnapshot requestDoc = await _firestore
+          .collection('friendRequests')
+          .doc(requestId)
+          .get();
+
+      if (requestDoc.exists) {
+        FriendRequestModel requset = FriendRequestModel.fromMap(
+          requestDoc.data() as Map<String, dynamic>,
+        );
+
+        if (status == FriendRequestStatus.accepted) {
+          await createFriendship(requset.senderId, requset.receiverId);
+
+          await createNotification(
+            NotificationModel(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              userId: requset.senderId,
+              title: 'Friend Request Accepted',
+              body: 'Your friend request has been accepted',
+              type: NotificationType.friendRequestAccepted,
+              data: {'userId': requset.receiverId},
+              createdAt: DateTime.now(),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      throw Exception('Failed to Respond to Friend Request: ${e.toString()}');
     }
   }
 }
