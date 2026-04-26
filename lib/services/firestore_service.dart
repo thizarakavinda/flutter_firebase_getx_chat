@@ -167,6 +167,28 @@ class FirestoreService {
               createdAt: DateTime.now(),
             ),
           );
+
+          await _removeNotificationForCancelledRequest(
+            requset.receiverId,
+            requset.senderId,
+          );
+        } else if (status == FriendRequestStatus.rejected) {
+          await createNotification(
+            NotificationModel(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              userId: requset.senderId,
+              title: 'Friend Request Rejected',
+              body: 'Your friend request has been declined',
+              type: NotificationType.friendRequestDeclined,
+              data: {'userId': requset.receiverId},
+              createdAt: DateTime.now(),
+            ),
+          );
+
+          await _removeNotificationForCancelledRequest(
+            requset.receiverId,
+            requset.senderId,
+          );
         }
       }
     } catch (e) {
