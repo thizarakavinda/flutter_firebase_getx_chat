@@ -222,5 +222,26 @@ class FirestoreService {
         );
   }
 
+  Future<FriendRequestModel?> getFriendRequestById(
+    String senderId,
+    String receiverId,
+  ) async {
+    try {
+      QuerySnapshot query = await _firestore
+          .collection('friendRequests')
+          .where('senderId', isEqualTo: senderId)
+          .where('receiverId', isEqualTo: receiverId)
+          .where('status', isEqualTo: 'pending')
+          .get();
 
+      if (query.docs.isNotEmpty) {
+        return FriendRequestModel.fromMap(
+          query.docs.first.data() as Map<String, dynamic>,
+        );
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Failed to Get Friend Request: ${e.toString()}');
+    }
+  }
 }
