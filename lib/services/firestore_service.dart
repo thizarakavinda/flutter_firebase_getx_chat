@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
@@ -399,6 +400,48 @@ class FirestoreService {
       return false;
     } catch (e) {
       throw Exception('Failed to check if user is blocked: ${e.toString()}');
+    }
+  }
+
+  // chat collections
+
+  Future<String> createOrGetChat(String userId1, String userId2) async {
+    try {
+      List<String> participants = [userId1, userId2];
+      participants.sort();
+
+      String chatId = '${participants[0]}_${participants[1]}';
+
+      DocumentReference chatRef = _firestore.collection('chats').doc(chatId);
+      DocumentSnapshot chatDoc = await chatRef.get();
+
+      if (!chatDoc.exists) {
+        ChatModel newChat = ChatModel(
+          id: chatId,
+          participants: participants,
+          unreadCount: {userId1: 0, userId2: 0},
+          deletedBy: {userId1: false, userId2: false},
+          deletedAt: {userId1: null, userId2: null},
+          lastSeenBy: {userId1: DateTime.now(), userId2: DateTime.now()},
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+
+        await chatRef.set(newChat.toMap());
+        
+      } else{
+        ChatModel existingChat = ChatModel.fromMap(chatDoc.data() as Map<String, dynamic>);
+        if (existingChat.isDeletedBy(userId1)) {
+          await restoreChatForUser(chatId, userId1);
+        }
+        if (existingChat.isDeletedBy(userId2)) {
+          await restoreChatForUser(chatId, userId2);
+        }
+      }
+      
+      return chatId;
+    } catch (e) {
+      throw Exception('Failed to Create or Get Chat: ${e.toString()}');
     }
   }
 }
