@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
@@ -474,6 +472,17 @@ class FirestoreService {
       });
     } catch (e) {
       throw Exception('Failed to Update Chat Last Message: ${e.toString()}');
+    }
+  }
+
+  Future<void> updateUserLastSeen(String chatId, String userId)async{
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'lastSeenBy.$userId': DateTime.now().millisecondsSinceEpoch,
+      });
+      
+    } catch (e) {
+      throw Exception('Failed to Update User Last Seen: ${e.toString()}');
     }
   }
 }
