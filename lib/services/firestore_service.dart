@@ -4,6 +4,7 @@ import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/message_model.dart';
 import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
+import 'package:logger/web.dart';
 import '../models/user_model.dart';
 
 class FirestoreService {
@@ -736,7 +737,23 @@ class FirestoreService {
       }
       await batch.commit();
     } catch (e) {
-      throw Exception('Failed to Delete Notification: ${e.toString()}');
+      // throw Exception('Failed to Delete Notification: ${e.toString()}');
+      Logger().e('Failed to Delete Notification: ${e.toString()}');
+    }
+  }
+
+  Future<void> _removeNotificationForCancelledRequest(
+    String receiverId,
+    String senderId,
+  ) async {
+    try {
+      await deleteNotificationByTypeAndUser(
+        receiverId,
+        NotificationType.friendRequest,
+        senderId,
+      );
+    } catch (e) {
+      Logger().e('Failed to Remove Related Notifications: ${e.toString()}');
     }
   }
 }
