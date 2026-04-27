@@ -626,5 +626,13 @@ class FirestoreService {
     }
   }
 
-  
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await _firestore.collection('messages').doc(messageId).delete();
+    } catch (e) {
+      throw Exception('Failed to Delete Message: ${e.toString()}');
+    }
+  }
+
+
 }
