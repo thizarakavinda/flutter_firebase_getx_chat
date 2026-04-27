@@ -327,4 +327,33 @@ class FirestoreService {
       throw Exception('Failed to Unblock User: ${e.toString()}');
     }
   }
+
+  Stream<List<FriendshipModel>> getFriendsStream(String userId) {
+    return _firestore
+        .collection('friendships')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .asyncMap((snapshot1) async {
+          QuerySnapshot snapshot2 = await _firestore
+              .collection('friendships')
+              .where('user2Id', isEqualTo: userId)
+              .get();
+
+          List<FriendshipModel> friendships = [];
+
+          for (var doc in snapshot1.docs) {
+            friendships.add(
+              FriendshipModel.fromMap(doc.data() as Map<String, dynamic>),
+            );
+          }
+
+          for (var doc in snapshot2.docs) {
+            friendships.add(
+              FriendshipModel.fromMap(doc.data() as Map<String, dynamic>),
+            );
+          }
+
+          return friendships.where((f) => !f.isBlocked).toList();
+        });
+  }
 }
