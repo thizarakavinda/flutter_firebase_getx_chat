@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
+import 'package:flutter_firebase_getx_chat/models/message_model.dart';
 import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
 import '../models/user_model.dart';
 
@@ -458,5 +459,21 @@ class FirestoreService {
               .where((chat) => !chat.isDeletedBy(userId))
               .toList(),
         );
+  }
+
+  Future<void> updateChatLastMessage(
+    String chatId,
+    MessageModel message,
+  ) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'lastMessage': message.content,
+        'lastMessageTime': message.timestamp.millisecondsSinceEpoch,
+        'lastMessageSenderId': message.senderId,
+        'updatedAt': DateTime.now().microsecondsSinceEpoch,
+      });
+    } catch (e) {
+      throw Exception('Failed to Update Chat Last Message: ${e.toString()}');
+    }
   }
 }
