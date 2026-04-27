@@ -697,9 +697,46 @@ class FirestoreService {
       }
       await batch.commit();
     } catch (e) {
-      throw Exception('Failed to Mark All Notifications as Read: ${e.toString()}');
+      throw Exception(
+        'Failed to Mark All Notifications as Read: ${e.toString()}',
+      );
     }
   }
 
-  
+  Future<void> deleteNotification(String notificationId) async {
+    try {
+      await _firestore.collection('notifications').doc(notificationId).delete();
+    } catch (e) {
+      throw Exception('Failed to Delete Notification: ${e.toString()}');
+    }
+  }
+
+  Future<void> deleteNotificationByTypeAndUser(
+    String userId,
+    NotificationType type,
+    String relatedUserId,
+  ) async {
+    try {
+      QuerySnapshot notifications = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .where('type', isEqualTo: type.name)
+          .get();
+
+      WriteBatch batch = _firestore.batch();
+
+      for (var doc in notifications.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        if (data['data'] != null &&
+            (data['data']['senderId'] == relatedUserId ||
+                data['data']['userId'] == relatedUserId)) {
+          batch.delete(doc.reference);
+        }
+      }
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Failed to Delete Notification: ${e.toString()}');
+    }
+  }
 }
