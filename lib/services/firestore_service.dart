@@ -505,4 +505,18 @@ class FirestoreService {
       throw Exception('Failed to Restore Chat: ${e.toString()}');
     }
   }
+
+  Future<void> updateUnreadCount(
+    String chatId,
+    String userId,
+    int count,
+  ) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'unreadCount.$userId': count,
+      });
+    } catch (e) {
+      throw Exception('Failed to Update Unread Count: ${e.toString()}');
+    }
+  }
 }
