@@ -634,5 +634,15 @@ class FirestoreService {
     }
   }
 
-
+  Future<void> editMessage(String messageId, String newContent) async {
+    try {
+      await _firestore.collection('messages').doc(messageId).update({
+        'content': newContent,
+        'isEdited': true,
+        'editedAt': DateTime.now().millisecondsSinceEpoch,
+      });
+    } catch (e) {
+      throw Exception('Failed to Edit Message: ${e.toString()}');
+    }
+  }
 }
