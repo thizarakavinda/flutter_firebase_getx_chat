@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
+import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/notification_model.dart';
 import '../models/user_model.dart';
 
@@ -242,6 +243,31 @@ class FirestoreService {
       return null;
     } catch (e) {
       throw Exception('Failed to Get Friend Request: ${e.toString()}');
+    }
+  }
+
+  //friendship collection
+
+  Future<void> createFriendship(String user1Id, String user2Id) async {
+    try {
+      List<String> userIds = [user1Id, user2Id];
+      userIds.sort();
+
+      String friendshipId = '${userIds[0]}_${userIds[1]}';
+
+      FriendshipModel friendShip = FriendshipModel(
+        id: friendshipId,
+        user1Id: userIds[0],
+        user2Id: userIds[1],
+        createdAt: DateTime.now(),
+      );
+
+      await _firestore
+          .collection('friendships')
+          .doc(friendshipId)
+          .set(friendShip.toMap());
+    } catch (e) {
+      throw Exception('Failed to Create Friendship: ${e.toString()}');
     }
   }
 }
