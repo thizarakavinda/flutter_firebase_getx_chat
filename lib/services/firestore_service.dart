@@ -428,9 +428,10 @@ class FirestoreService {
         );
 
         await chatRef.set(newChat.toMap());
-        
-      } else{
-        ChatModel existingChat = ChatModel.fromMap(chatDoc.data() as Map<String, dynamic>);
+      } else {
+        ChatModel existingChat = ChatModel.fromMap(
+          chatDoc.data() as Map<String, dynamic>,
+        );
         if (existingChat.isDeletedBy(userId1)) {
           await restoreChatForUser(chatId, userId1);
         }
@@ -438,10 +439,24 @@ class FirestoreService {
           await restoreChatForUser(chatId, userId2);
         }
       }
-      
+
       return chatId;
     } catch (e) {
       throw Exception('Failed to Create or Get Chat: ${e.toString()}');
     }
+  }
+
+  Stream<List<ChatModel>> getUserChatsStream(String userId) {
+    return _firestore
+        .collection('chats')
+        .where('participants', arrayContains: userId)
+        .orderBy('updatedAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => ChatModel.fromMap(doc.data()))
+              .where((chat) => !chat.isDeletedBy(userId))
+              .toList(),
+        );
   }
 }
