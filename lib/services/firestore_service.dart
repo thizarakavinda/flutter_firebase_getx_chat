@@ -645,4 +645,19 @@ class FirestoreService {
       throw Exception('Failed to Edit Message: ${e.toString()}');
     }
   }
+
+  // Notification collection
+
+  Future<void> createNotification(NotificationModel notification) async {
+    try {
+      await _firestore
+          .collection('notifications')
+          .doc(notification.id)
+          .set(notification.toMap());
+    } catch (e) {
+      throw Exception('Failed to Create Notification: ${e.toString()}');
+    }
+  }
+
+  
 }
