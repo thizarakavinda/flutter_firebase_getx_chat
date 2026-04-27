@@ -356,4 +356,25 @@ class FirestoreService {
           return friendships.where((f) => !f.isBlocked).toList();
         });
   }
+
+  Future<FriendshipModel?> getFriendship(String user1Id, String user2Id) async {
+    try {
+      List<String> userIds = [user1Id, user2Id];
+      userIds.sort();
+
+      String friendshipId = '${userIds[0]}_${userIds[1]}';
+
+      DocumentSnapshot doc = await _firestore
+          .collection('friendships')
+          .doc(friendshipId)
+          .get();
+
+      if (doc.exists) {
+        return FriendshipModel.fromMap(doc.data() as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Failed to Get Friendship: ${e.toString()}');
+    }
+  }
 }
