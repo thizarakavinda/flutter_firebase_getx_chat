@@ -311,4 +311,20 @@ class FirestoreService {
       throw Exception('Failed to Block User: ${e.toString()}');
     }
   }
+
+  Future<void> unblockUser(String user1Id, String user2Id) async {
+    try {
+      List<String> userIds = [user1Id, user2Id];
+      userIds.sort();
+
+      String friendShipId = '${userIds[0]}_${userIds[1]}';
+
+      await _firestore.collection('friendships').doc(friendShipId).update({
+        'isBlocked': false,
+        'blockedBy': null,
+      });
+    } catch (e) {
+      throw Exception('Failed to Unblock User: ${e.toString()}');
+    }
+  }
 }
