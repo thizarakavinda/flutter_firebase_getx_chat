@@ -672,5 +672,34 @@ class FirestoreService {
         );
   }
 
+  Future<void> markNotificationAsRead(String notificationId) async {
+    try {
+      await _firestore.collection('notifications').doc(notificationId).update({
+        'isRead': true,
+      });
+    } catch (e) {
+      throw Exception('Failed to Mark Notification as Read: ${e.toString()}');
+    }
+  }
+
+  Future<void> markAllNotificationsAsRead(String userId) async {
+    try {
+      QuerySnapshot notifications = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      WriteBatch batch = _firestore.batch();
+
+      for (var doc in notifications.docs) {
+        batch.update(doc.reference, {'isRead': true});
+      }
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Failed to Mark All Notifications as Read: ${e.toString()}');
+    }
+  }
+
   
 }
