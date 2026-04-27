@@ -615,4 +615,16 @@ class FirestoreService {
           return messages;
         });
   }
+
+  Future<void> markMessageAsRead(String messageId) async {
+    try {
+      await _firestore.collection('messages').doc(messageId).update({
+        'isRead': true,
+      });
+    } catch (e) {
+      throw Exception('Failed to Mark Message as Read: ${e.toString()}');
+    }
+  }
+
+  
 }
