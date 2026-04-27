@@ -208,4 +208,19 @@ class FirestoreService {
               .toList(),
         );
   }
+
+  Stream<List<FriendRequestModel>> getSentFriendRequestsStream(String userId) {
+    return _firestore
+        .collection('friendRequests')
+        .where('senderId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => FriendRequestModel.fromMap(doc.data()))
+              .toList(),
+        );
+  }
+
+
 }
