@@ -520,10 +520,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> restoreUnreadCount(
-    String chatId,
-    String userId,
-  ) async {
+  Future<void> restoreUnreadCount(String chatId, String userId) async {
     try {
       await _firestore.collection('chats').doc(chatId).update({
         'unreadCount.$userId': count,
@@ -533,5 +530,42 @@ class FirestoreService {
     }
   }
 
+  // Message collection
 
+  Future<void> sendMessage(MessageModel message) async {
+    try {
+      await _firestore
+          .collection('messages')
+          .doc(message.id)
+          .set(message.toMap());
+
+      String chatId = await createOrGetChat(
+        message.senderId,
+        message.receiverId,
+      );
+
+      await updateChatLastMessage(chatId, message);
+
+      await updateUserLastSeen(chatId, message.senderId);
+
+      DocumentSnapshot chatDoc = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .get();
+
+      if (chatDoc.exists) {
+        ChatModel chat = ChatModel.fromMap(
+          chatDoc.data() as Map<String, dynamic>,
+        );
+
+        int currentUnread = chat.getUnreadCount(message.receiverId);
+
+        await updateUnreadCount(chatId, message.receiverId, currentUnread + 1);
+      }
+
+      await updateUnreadCount(chatId, message.receiverId, 1);
+    } catch (e) {
+      throw Exception('Failed to Send Message: ${e.toString()}');
+    }
+  }
 }
