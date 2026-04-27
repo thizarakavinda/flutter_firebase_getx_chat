@@ -377,4 +377,28 @@ class FirestoreService {
       throw Exception('Failed to Get Friendship: ${e.toString()}');
     }
   }
+
+  Future<bool> isUserBlocked(String userId, String otherUserId) async {
+    try {
+      List<String> userIds = [userId, otherUserId];
+      userIds.sort();
+
+      String friendShipId = '${userIds[0]}_${userIds[1]}';
+      DocumentSnapshot doc = await _firestore
+          .collection('friendships')
+          .doc(friendShipId)
+          .get();
+
+      if (doc.exists) {
+        FriendshipModel friendship = FriendshipModel.fromMap(
+          doc.data() as Map<String, dynamic>,
+        );
+
+        return friendship.isBlocked;
+      }
+      return false;
+    } catch (e) {
+      throw Exception('Failed to check if user is blocked: ${e.toString()}');
+    }
+  }
 }
