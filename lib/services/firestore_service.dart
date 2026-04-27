@@ -270,4 +270,29 @@ class FirestoreService {
       throw Exception('Failed to Create Friendship: ${e.toString()}');
     }
   }
+
+  Future<void> removeFriendShip(String user1Id, String user2Id) async {
+    try {
+      List<String> userIds = [user1Id, user2Id];
+      userIds.sort();
+
+      String friendshipId = '${userIds[0]}_${userIds[1]}';
+
+      await _firestore.collection('friendships').doc(friendshipId).delete();
+
+      await createNotification(
+        NotificationModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          userId: user2Id,
+          title: 'Friend Removed',
+          body: 'You are no longer friends',
+          type: NotificationType.friendRemoved,
+          data: {'userId': user2Id},
+          createdAt: DateTime.now(),
+        ),
+      );
+    } catch (e) {
+      throw Exception('Failed to Remove Friendship: ${e.toString()}');
+    }
+  }
 }
