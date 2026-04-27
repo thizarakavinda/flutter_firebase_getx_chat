@@ -475,12 +475,11 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateUserLastSeen(String chatId, String userId)async{
+  Future<void> updateUserLastSeen(String chatId, String userId) async {
     try {
       await _firestore.collection('chats').doc(chatId).update({
         'lastSeenBy.$userId': DateTime.now().millisecondsSinceEpoch,
       });
-      
     } catch (e) {
       throw Exception('Failed to Update User Last Seen: ${e.toString()}');
     }
@@ -494,6 +493,16 @@ class FirestoreService {
       });
     } catch (e) {
       throw Exception('Failed to Delete Chat: ${e.toString()}');
+    }
+  }
+
+  Future<void> restoreChatForUser(String chatId, String userId) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'deletedBy.$userId': false,
+      });
+    } catch (e) {
+      throw Exception('Failed to Restore Chat: ${e.toString()}');
     }
   }
 }
