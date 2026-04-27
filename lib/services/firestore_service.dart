@@ -195,4 +195,17 @@ class FirestoreService {
       throw Exception('Failed to Respond to Friend Request: ${e.toString()}');
     }
   }
+
+  Stream<List<FriendRequestModel>> getFriendRequestsStream(String userId) {
+    return _firestore
+        .collection('friendRequests')
+        .where('status', isEqualTo: 'pending')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => FriendRequestModel.fromMap(doc.data()))
+              .toList(),
+        );
+  }
 }
