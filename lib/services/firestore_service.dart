@@ -568,4 +568,51 @@ class FirestoreService {
       throw Exception('Failed to Send Message: ${e.toString()}');
     }
   }
+
+  Stream<List<MessageModel>> getMessagesStream(String userId1, String userId2) {
+    return _firestore
+        .collection('messages')
+        .where('senderId', whereIn: [userId1, userId2])
+        .snapshots()
+        .asyncMap((snapshot) async {
+          List<String> participants = [userId1, userId2];
+          participants.sort();
+          String chatId = '${participants[0]}_${participants[1]}';
+
+          DocumentSnapshot chatDoc = await _firestore
+              .collection('chats')
+              .doc(chatId)
+              .get();
+
+          ChatModel? chat;
+          if (chatDoc.exists) {
+            chat = ChatModel.fromMap(chatDoc.data() as Map<String, dynamic>);
+          }
+
+          List<MessageModel> messages = [];
+          for (var doc in snapshot.docs) {
+            MessageModel message = MessageModel.fromMap(doc.data());
+            if ((message.senderId == userId1 &&
+                    message.receiverId == userId2) ||
+                (message.senderId == userId2 &&
+                    message.receiverId == userId1)) {
+              bool includeMessage = true;
+
+              if (chat != null) {
+                DateTime? currentUserDeletedAt = chat.getDeletedAt(userId1);
+                if (currentUserDeletedAt != null &&
+                    message.timestamp.isBefore(currentUserDeletedAt)) {
+                  includeMessage = false;
+                }
+              }
+
+              if (includeMessage) {
+                messages.add(message);
+              }
+            }
+          }
+          messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+          return messages;
+        });
+  }
 }
