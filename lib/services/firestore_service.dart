@@ -485,4 +485,15 @@ class FirestoreService {
       throw Exception('Failed to Update User Last Seen: ${e.toString()}');
     }
   }
+
+  Future<void> deleteChatForUser(String chatId, String userId) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).update({
+        'deletedBy.$userId': true,
+        'deletedAt.$userId': DateTime.now().millisecondsSinceEpoch,
+      });
+    } catch (e) {
+      throw Exception('Failed to Delete Chat: ${e.toString()}');
+    }
+  }
 }
