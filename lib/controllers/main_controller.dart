@@ -12,9 +12,9 @@ class MainController extends GetxController {
   void onInit() {
     super.onInit();
 
-    Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => FriendsController());
-    Get.lazyPut(() => UsersListController());
+    // Get.lazyPut(() => HomeController());
+    // Get.lazyPut(() => FriendsController());
+    // Get.lazyPut(() => UsersListController());
     Get.lazyPut(() => ProfileController());
   }
 
