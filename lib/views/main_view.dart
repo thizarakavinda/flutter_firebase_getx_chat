@@ -5,6 +5,8 @@ import 'package:flutter_firebase_getx_chat/views/profile/profile_view.dart';
 import 'package:get/get.dart';
 
 class MainView extends GetView<MainController> {
+  const MainView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,4 +64,30 @@ class MainView extends GetView<MainController> {
       ),
     );
   }
+}
+
+Widget _buildIconWithBadge(IconData icon, int count) {
+  return Stack(
+    children: [
+      Icon(icon),
+      if (count > 0)
+        Positioned(
+          right: 0,
+          top: 0,
+          child: Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: AppTheme.errorColor,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            constraints: BoxConstraints(minWidth: 12, minHeight: 12),
+            child: Text(
+              count > 99 ? '99+' : count.toString(),
+              style: TextStyle(color: Colors.white, fontSize: 8),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+    ],
+  );
 }
