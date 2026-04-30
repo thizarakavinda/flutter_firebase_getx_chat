@@ -39,6 +39,12 @@ class MainView extends GetView<MainController> {
               ),
               label: 'Chats',
             ),
+
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people_outline),
+              activeIcon: Icon(Icons.people),
+              label: 'Friends',
+            ),
           ],
         ),
       ),
