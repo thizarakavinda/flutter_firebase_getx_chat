@@ -32,4 +32,8 @@ class MainController extends GetxController {
       curve: Curves.ease,
     );
   }
+
+  void onPageChanged(int index) {
+    _currentIndex.value = index;
+  }
 }
