@@ -46,4 +46,14 @@ class MainController extends GetxController {
       return 0;
     }
   }
+
+  int getNotificationCount() {
+    try {
+      // final homeController = Get.find<HomeController>();
+      // return homeController.getUnreadNotificationCount();
+      return 5;
+    } catch (e) {
+      return 0;
+    }
+  }
 }
