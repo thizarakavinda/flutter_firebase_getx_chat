@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class MainController extends GetxController {
   final RxInt _currentIndex = 0.obs;
-  final PageController  pageController = PageController();
+  final PageController pageController = PageController();
 
   int get currentIndex => _currentIndex.value;
 
@@ -18,5 +18,18 @@ class MainController extends GetxController {
     Get.lazyPut(() => ProfileController());
   }
 
-  
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
+
+  void changeTabIndex(int index) {
+    _currentIndex.value = index;
+    pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
 }
