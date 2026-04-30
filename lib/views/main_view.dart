@@ -51,6 +51,12 @@ class MainView extends GetView<MainController> {
               activeIcon: Icon(Icons.person_search),
               label: 'Find Friends',
             ),
+
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined),
+              activeIcon: Icon(Icons.account_circle),
+              label: 'Profile',
+            ),
           ],
         ),
       ),
