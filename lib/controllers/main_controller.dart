@@ -36,4 +36,14 @@ class MainController extends GetxController {
   void onPageChanged(int index) {
     _currentIndex.value = index;
   }
+
+  int getUnreadCount() {
+    try {
+      // final homeController = Get.find<HomeController>();
+      // return homeController.getTotalUnreadCount();
+      return 5;
+    } catch (e) {
+      return 0;
+    }
+  }
 }
