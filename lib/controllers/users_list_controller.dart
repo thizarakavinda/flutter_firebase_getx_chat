@@ -65,4 +65,31 @@ class UsersListController extends GetxController {
       }
     });
   }
+
+  void _loadRelationships() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      // Load sent friend requests
+      _sentRequests.bindStream(
+        _firestoreService.getSentFriendRequestsStream(currentUserId),
+      );
+
+      // Load received friend requests
+      _receivedRequests.bindStream(
+        _firestoreService.getFriendRequestsStream(currentUserId),
+      );
+
+      // Load friendships/ friends list
+      _friendships.bindStream(
+        _firestoreService.getFriendsStream(currentUserId),
+      );
+
+      // Update relationship status whenever any of the streams change
+      ever(_sentRequests, (_) => updateAllRelationshipsStatus());
+      ever(_receivedRequests, (_) => updateAllRelationshipsStatus());
+      ever(_friendships, (_) => updateAllRelationshipsStatus());
+
+      ever(_users, (_) => updateAllRelationshipsStatus());
+    }
+  }
 }
