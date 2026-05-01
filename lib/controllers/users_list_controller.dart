@@ -2,6 +2,7 @@ import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
+import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/web.dart';
@@ -304,6 +305,41 @@ class UsersListController extends GetxController {
       _error.value = e.toString();
       Logger().e('Error declining friend request: $e');
       Get.snackbar('Error', 'Failed to decline friend request');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> startChat(UserModel user) async {
+    try {
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+
+      if (currentUserId != null) {
+        final relationship =
+            _userRelationships[user.id] ?? UserRelationshipStatus.none;
+        if (relationship != UserRelationshipStatus.friends) {
+          Get.snackbar(
+            'Info',
+            'You can only chat with friends. Please send a friend request first.',
+          );
+          return;
+        }
+
+        final chatId = await _firestoreService.createOrGetChat(
+          currentUserId,
+          user.id,
+        );
+
+        Get.toNamed(
+          AppRoutes.chat,
+          arguments: {'chatId': chatId, 'otherUser': user},
+        );
+      }
+    } catch (e) {
+      _error.value = e.toString();
+      Logger().e('Error starting chat: $e');
+      Get.snackbar('Error', 'Failed to start chat');
     } finally {
       _isLoading.value = false;
     }
