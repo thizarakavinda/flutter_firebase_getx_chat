@@ -354,12 +354,16 @@ class UsersListController extends GetxController {
     switch (status) {
       case UserRelationshipStatus.none:
         return 'Add Friend';
+
       case UserRelationshipStatus.friendRequestSent:
         return 'Request Sent';
+
       case UserRelationshipStatus.friendRequestReceived:
         return 'Accept Request';
+
       case UserRelationshipStatus.friends:
         return 'Message';
+
       case UserRelationshipStatus.blocked:
         return 'Blocked';
     }
@@ -369,29 +373,62 @@ class UsersListController extends GetxController {
     switch (status) {
       case UserRelationshipStatus.none:
         return Icons.person_add;
+
       case UserRelationshipStatus.friendRequestSent:
         return Icons.access_time;
+
       case UserRelationshipStatus.friendRequestReceived:
         return Icons.check;
+
       case UserRelationshipStatus.friends:
         return Icons.chat_bubble_outline;
+
       case UserRelationshipStatus.blocked:
         return Icons.block;
     }
-  } 
+  }
 
   Color getRelationshipButtonColor(UserRelationshipStatus status) {
     switch (status) {
       case UserRelationshipStatus.none:
         return Colors.blue;
+
       case UserRelationshipStatus.friendRequestSent:
         return Colors.orange;
+
       case UserRelationshipStatus.friendRequestReceived:
         return Colors.green;
+
       case UserRelationshipStatus.friends:
         return Colors.blue;
+
       case UserRelationshipStatus.blocked:
         return Colors.redAccent;
+    }
+  }
+
+  void handleRelationshipAction(UserModel user) {
+    final status = getUserRelationshipStatus(user.id);
+    switch (status) {
+      case UserRelationshipStatus.none:
+        sendFriendRequest(user);
+        break;
+
+      case UserRelationshipStatus.friendRequestSent:
+        cancelFriendRequest(user);
+        break;
+
+      case UserRelationshipStatus.friendRequestReceived:
+        acceptFriendRequest(user);
+        break;
+
+      case UserRelationshipStatus.friends:
+        startChat(user);
+        break;
+        
+      case UserRelationshipStatus.blocked:
+        Get.snackbar('Info', 'You have blocked this user');
+        break;
     }
   }
 }
