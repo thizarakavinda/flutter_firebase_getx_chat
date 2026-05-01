@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -238,5 +237,39 @@ class UsersListController extends GetxController {
     }
   }
 
-  
+  Future<void> acceptFriendRequest(UserModel user) async {
+    try {
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+
+      if (currentUserId != null) {
+        final request = _receivedRequests.firstWhereOrNull(
+          (r) =>
+              r.senderId == user.id && r.status == FriendRequestStatus.pending,
+        );
+
+        if (request != null) {
+          _userRelationships[user.id] = UserRelationshipStatus.friends;
+
+          await _firestoreService.respondToFriendRequest(
+            request.id,
+            FriendRequestStatus.accepted,
+          );
+
+          Get.snackbar(
+            'Friend Request Accepted',
+            'You are now friends with ${user.displayName}',
+          );
+        }
+      }
+    } catch (e) {
+      _userRelationships[user.id] =
+          UserRelationshipStatus.friendRequestReceived;
+      _error.value = e.toString();
+      Logger().e('Error accepting friend request: $e');
+      Get.snackbar('Error', 'Failed to accept friend request');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 }
