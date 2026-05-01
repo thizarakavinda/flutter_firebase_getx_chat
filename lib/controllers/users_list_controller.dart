@@ -34,4 +34,19 @@ class UsersListController extends GetxController {
   String get error => _error.value;
   Map<String, UserRelationshipStatus> get userRelationships =>
       _userRelationships;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadUsers();
+    _loadRelationships();
+
+    debounce(
+      _sentRequests,
+      (_) => _filterUsers(),
+      time: Duration(milliseconds: 300),
+    );
+  }
+
+  
 }
