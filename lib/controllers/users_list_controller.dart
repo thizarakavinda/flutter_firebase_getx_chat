@@ -178,10 +178,24 @@ class UsersListController extends GetxController {
 
   Future<void> sendFriendRequest(UserModel user) async {
     try {
-      Get.snackbar(
-        'Sending Request',
-        'Friend Request Sent to ${user.displayName}',
-      );
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+      if (currentUserId != null) {
+        final request = FriendRequestModel(
+          id: _uuid.v4(),
+          senderId: currentUserId,
+          receiverId: user.id,
+          createdAt: DateTime.now(),
+        );
+
+        _userRelationships[user.id] = UserRelationshipStatus.friendRequestSent;
+
+        await _firestoreService.sendFriendRequest(request);
+        Get.snackbar(
+          'Sending Request',
+          'Friend Request Sent to ${user.displayName}',
+        );
+      }
     } catch (e) {
       _userRelationships[user.id] = UserRelationshipStatus.none;
       _error.value = e.toString();
@@ -191,4 +205,38 @@ class UsersListController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  Future<void> cancelFriendRequest(UserModel user) async {
+    try {
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+
+      if (currentUserId != null) {
+        final request = _sentRequests.firstWhereOrNull(
+          (r) =>
+              r.receiverId == user.id &&
+              r.status == FriendRequestStatus.pending,
+        );
+
+        if (request != null) {
+          _userRelationships[user.id] = UserRelationshipStatus.none;
+
+          await _firestoreService.cancelFriendRequest(request.id);
+          Get.snackbar(
+            'Cancelling Request',
+            'Friend Request to ${user.displayName} Cancelled',
+          );
+        }
+      }
+    } catch (e) {
+      _userRelationships[user.id] = UserRelationshipStatus.friendRequestSent;
+      _error.value = e.toString();
+      Logger().e('Error cancelling friend request: $e');
+      Get.snackbar('Error', 'Failed to cancel friend request');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  
 }
