@@ -425,10 +425,31 @@ class UsersListController extends GetxController {
       case UserRelationshipStatus.friends:
         startChat(user);
         break;
-        
+
       case UserRelationshipStatus.blocked:
         Get.snackbar('Info', 'You have blocked this user');
         break;
+    }
+  }
+
+  String getLastSeenText(UserModel user) {
+    if (user.isOnline) {
+      return 'Online';
+    } else {
+      final now = DateTime.now();
+      final difference = now.difference(user.lastSeen);
+
+      if (difference.inMinutes < 1) {
+        return 'Just now';
+      } else if (difference.inHours < 1) {
+        return 'Last seen ${difference.inMinutes} m ago';
+      } else if (difference.inDays < 1) {
+        return 'Last seen ${difference.inHours} h ago';
+      } else if (difference.inDays < 7) {
+        return 'Last seen ${difference.inDays} d ago';
+      } else {
+        return 'Last seen ${user.lastSeen.day}/${user.lastSeen.month}/${user.lastSeen.year}';
+      }
     }
   }
 }
