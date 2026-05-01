@@ -272,4 +272,40 @@ class UsersListController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  Future<void> declineFriendRequest(UserModel user) async {
+    try {
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+
+      if (currentUserId != null) {
+        final request = _receivedRequests.firstWhereOrNull(
+          (r) =>
+              r.senderId == user.id && r.status == FriendRequestStatus.pending,
+        );
+
+        if (request != null) {
+          _userRelationships[user.id] = UserRelationshipStatus.none;
+
+          await _firestoreService.respondToFriendRequest(
+            request.id,
+            FriendRequestStatus.rejected,
+          );
+
+          Get.snackbar(
+            'Friend Request Declined',
+            'You declined the friend request from ${user.displayName}',
+          );
+        }
+      }
+    } catch (e) {
+      _userRelationships[user.id] =
+          UserRelationshipStatus.friendRequestReceived;
+      _error.value = e.toString();
+      Logger().e('Error declining friend request: $e');
+      Get.snackbar('Error', 'Failed to decline friend request');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 }
