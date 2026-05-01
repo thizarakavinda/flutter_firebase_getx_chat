@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -48,5 +49,20 @@ class UsersListController extends GetxController {
     );
   }
 
-  
+  void _loadUsers() async {
+    _users.bindStream(_firestoreService.getAllUserStream());
+
+    ever(_users, (List<UserModel> userList) {
+      final currentUserId = _authController.user?.uid;
+      final otherUsers = userList
+          .where((user) => user.id != currentUserId)
+          .toList();
+
+      if (_searchQuery.isEmpty) {
+        _filteredUsers.value = otherUsers;
+      } else {
+        _filterUsers();
+      }
+    });
+  }
 }
