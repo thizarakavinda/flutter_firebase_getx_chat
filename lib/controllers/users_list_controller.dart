@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -7,7 +6,13 @@ import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
-enum UserRelationshipStatus { friendRequestReceived, friends, blocked }
+enum UserRelationshipStatus {
+  none,
+  friendRequestSent,
+  friendRequestReceived,
+  friends,
+  blocked,
+}
 
 class UsersListController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -85,23 +90,62 @@ class UsersListController extends GetxController {
       );
 
       // Update relationship status whenever any of the streams change
-      ever(_sentRequests, (_) => updateAllRelationshipsStatus());
-      ever(_receivedRequests, (_) => updateAllRelationshipsStatus());
-      ever(_friendships, (_) => updateAllRelationshipsStatus());
+      ever(_sentRequests, (_) => _updateAllRelationshipsStatus());
+      ever(_receivedRequests, (_) => _updateAllRelationshipsStatus());
+      ever(_friendships, (_) => _updateAllRelationshipsStatus());
 
-      ever(_users, (_) => updateAllRelationshipsStatus());
+      ever(_users, (_) => _updateAllRelationshipsStatus());
     }
   }
 
-  void _updateAllRelationShipsStatus() {
+  void _updateAllRelationshipsStatus() {
     final currentUserId = _authController.user?.uid;
     if (currentUserId == null) return;
 
     for (var user in _users) {
       if (user.id != currentUserId) {
-        final status = _calculateRelationshipStatus(user.id);
+        final status = _calculateUserRelationshipStatus(user.id);
         _userRelationships[user.id] = status;
       }
     }
+  }
+
+  UserRelationshipStatus _calculateUserRelationshipStatus(String userId) {
+    final currentUserId = _authController.user?.uid;
+
+    if (currentUserId == null) return UserRelationshipStatus.none;
+
+    final friendship = _friendships.firstWhereOrNull(
+      (f) =>
+          (f.user1Id == currentUserId && f.user2Id == userId) ||
+          (f.user1Id == userId && f.user2Id == currentUserId),
+    );
+
+    if (friendship != null) {
+      if (friendship.isBlocked) {
+        return UserRelationshipStatus.blocked;
+      } else {
+        return UserRelationshipStatus.friends;
+      }
+    }
+
+    // Check if there's a pending friend request sent to this user
+    final sentRequest = _sentRequests.firstWhereOrNull(
+      (r) => r.receiverId == userId && r.status == FriendRequestStatus.pending,
+    );
+
+    if (sentRequest != null) {
+      return UserRelationshipStatus.friendRequestSent;
+    }
+
+    // Check if there's a pending friend request received from this user
+    final receivedRequest = _receivedRequests.firstWhereOrNull(
+      (r) => r.senderId == userId && r.status == FriendRequestStatus.pending,
+    );
+
+    if (receivedRequest != null) {
+      return UserRelationshipStatus.friendRequestReceived;
+    }
+    return UserRelationshipStatus.none;
   }
 }
