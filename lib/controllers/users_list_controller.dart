@@ -92,4 +92,16 @@ class UsersListController extends GetxController {
       ever(_users, (_) => updateAllRelationshipsStatus());
     }
   }
+
+  void _updateAllRelationShipsStatus() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId == null) return;
+
+    for (var user in _users) {
+      if (user.id != currentUserId) {
+        final status = _calculateRelationshipStatus(user.id);
+        _userRelationships[user.id] = status;
+      }
+    }
+  }
 }
