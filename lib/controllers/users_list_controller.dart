@@ -148,4 +148,21 @@ class UsersListController extends GetxController {
     }
     return UserRelationshipStatus.none;
   }
+
+  void _filterUsers() {
+    final query = _searchQuery.value.toLowerCase();
+    final currentUserId = _authController.user?.uid;
+
+    if (query.isEmpty) {
+      _filteredUsers.value = _users
+          .where((user) => user.id != currentUserId)
+          .toList();
+    } else {
+      _filteredUsers.value = _users.where((user) {
+        return user.id != currentUserId &&
+            (user.displayName.toLowerCase().contains(query) ||
+                user.email.toLowerCase().contains(query));
+      }).toList();
+    }
+  }
 }
