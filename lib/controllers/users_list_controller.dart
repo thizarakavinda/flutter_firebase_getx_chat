@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -344,4 +346,38 @@ class UsersListController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  UserRelationshipStatus getUserRelationshipStatus(String userId) {
+    return _userRelationships[userId] ?? UserRelationshipStatus.none;
+  }
+
+  String getRelationshipButtonText(UserRelationshipStatus status) {
+    switch (status) {
+      case UserRelationshipStatus.none:
+        return 'Add Friend';
+      case UserRelationshipStatus.friendRequestSent:
+        return 'Request Sent';
+      case UserRelationshipStatus.friendRequestReceived:
+        return 'Accept Request';
+      case UserRelationshipStatus.friends:
+        return 'Message';
+      case UserRelationshipStatus.blocked:
+        return 'Blocked';
+    }
+  }
+
+  IconData getRelationshipButtonIcon(UserRelationshipStatus status) {
+    switch (status) {
+      case UserRelationshipStatus.none:
+        return Icons.person_add;
+      case UserRelationshipStatus.friendRequestSent:
+        return Icons.access_time;
+      case UserRelationshipStatus.friendRequestReceived:
+        return Icons.check;
+      case UserRelationshipStatus.friends:
+        return Icons.chat_bubble_outline;
+      case UserRelationshipStatus.blocked:
+        return Icons.block;
+    }
+  } 
 }
