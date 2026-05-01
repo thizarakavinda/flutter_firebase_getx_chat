@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
+import 'package:logger/web.dart';
 import 'package:uuid/uuid.dart';
 
 enum UserRelationshipStatus {
@@ -170,5 +172,23 @@ class UsersListController extends GetxController {
     _searchQuery.value = query;
   }
 
-  
+  void clearSearchQuery() {
+    _searchQuery.value = '';
+  }
+
+  Future<void> sendFriendRequest(UserModel user) async {
+    try {
+      Get.snackbar(
+        'Sending Request',
+        'Friend Request Sent to ${user.displayName}',
+      );
+    } catch (e) {
+      _userRelationships[user.id] = UserRelationshipStatus.none;
+      _error.value = e.toString();
+      Logger().e('Error sending friend request: $e');
+      Get.snackbar('Error', 'Failed to send friend request');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 }
