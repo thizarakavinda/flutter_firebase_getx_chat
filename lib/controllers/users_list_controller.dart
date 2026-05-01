@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
@@ -380,4 +379,19 @@ class UsersListController extends GetxController {
         return Icons.block;
     }
   } 
+
+  Color getRelationshipButtonColor(UserRelationshipStatus status) {
+    switch (status) {
+      case UserRelationshipStatus.none:
+        return Colors.blue;
+      case UserRelationshipStatus.friendRequestSent:
+        return Colors.orange;
+      case UserRelationshipStatus.friendRequestReceived:
+        return Colors.green;
+      case UserRelationshipStatus.friends:
+        return Colors.blue;
+      case UserRelationshipStatus.blocked:
+        return Colors.redAccent;
+    }
+  }
 }
