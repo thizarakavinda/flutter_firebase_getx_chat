@@ -359,7 +359,7 @@ class UsersListController extends GetxController {
         return 'Request Sent';
 
       case UserRelationshipStatus.friendRequestReceived:
-        return 'Accept Request';
+        return 'Accept';
 
       case UserRelationshipStatus.friends:
         return 'Message';
