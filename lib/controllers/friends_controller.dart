@@ -268,4 +268,8 @@ class FriendsController extends GetxController {
       }
     }
   }
+
+  void openFriendRequest() {
+    Get.toNamed(AppRoutes.friendRequests);
+  }
 }
