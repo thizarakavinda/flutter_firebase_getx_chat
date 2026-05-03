@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_firebase_getx_chat/controllers/profile_controller.dart';
 import 'package:get/get.dart';
 
@@ -26,6 +27,15 @@ class MainController extends GetxController {
     super.onClose();
   }
 
+  void _resetStatusBar() {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+  }
+
   void changeTabIndex(int index) {
     _currentIndex.value = index;
     pageController.animateToPage(
@@ -33,10 +43,12 @@ class MainController extends GetxController {
       duration: const Duration(milliseconds: 300),
       curve: Curves.ease,
     );
+    _resetStatusBar();
   }
 
   void onPageChanged(int index) {
     _currentIndex.value = index;
+    _resetStatusBar();
   }
 
   int getUnreadCount() {
