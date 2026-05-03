@@ -16,11 +16,11 @@ class MainView extends GetView<MainController> {
         controller: controller.pageController,
         onPageChanged: controller.onPageChanged,
         children: [
-          Container(color: Colors.red), // HomeView(),
+          Container(), // HomeView(),
           FriendsView(), // FriendsView(),
           FindPeopleView(), // UsersListView(),
           ProfileView(),
-    
+
           // ProfileView(),
         ],
       ),
@@ -45,19 +45,19 @@ class MainView extends GetView<MainController> {
               ),
               label: 'Chats',
             ),
-    
+
             BottomNavigationBarItem(
               icon: Icon(Icons.people_outline),
               activeIcon: Icon(Icons.people),
               label: 'Friends',
             ),
-    
+
             BottomNavigationBarItem(
               icon: Icon(Icons.person_search_outlined),
               activeIcon: Icon(Icons.person_search),
               label: 'Find Friends',
             ),
-    
+
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle_outlined),
               activeIcon: Icon(Icons.account_circle),
