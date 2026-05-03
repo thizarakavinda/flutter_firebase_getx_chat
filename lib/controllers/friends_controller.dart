@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -271,5 +269,9 @@ class FriendsController extends GetxController {
 
   void openFriendRequest() {
     Get.toNamed(AppRoutes.friendRequests);
+  }
+
+  void clearError() {
+    _error.value = '';
   }
 }
