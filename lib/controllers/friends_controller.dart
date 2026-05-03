@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
@@ -116,6 +117,54 @@ class FriendsController extends GetxController {
     final currentUserId = _authController.user?.uid;
     if (currentUserId != null) {
       _loadFriends();
+    }
+  }
+
+  Future<void> removeFriend(UserModel friend) async {
+    try {
+      final result = await Get.dialog<bool>(
+        AlertDialog(
+          title: Text('Remove Friend'),
+          content: Text(
+            'Are you sure you want to remove ${friend.displayName}?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+              child: Text('Remove'),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        final currentUserId = _authController.user?.uid;
+        if (currentUserId != null) {
+          await _firestoreService.removeFriendShip(currentUserId, friend.id);
+          Get.snackbar(
+            'Friend Removed',
+            '${friend.displayName} has been removed from your friends list.',
+            backgroundColor: Colors.green.withOpacity(0.1),
+            colorText: Colors.green,
+            duration: Duration(seconds: 4),
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to remove friend: ${e.toString()}',
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+        duration: Duration(seconds: 4),
+      );
+    } finally {
+      _isLoading.value = false;
     }
   }
 }
