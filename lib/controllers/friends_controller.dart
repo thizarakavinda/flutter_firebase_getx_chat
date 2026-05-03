@@ -43,4 +43,18 @@ class FriendsController extends GetxController {
     _friendshipsSubscriptions?.cancel();
     super.onClose();
   }
+
+  void _loadFriends() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      _friendshipsSubscriptions?.cancel();
+
+      _friendshipsSubscriptions = _firestoreService
+          .getFriendsStream(currentUserId)
+          .listen((_friendshipList) {
+            _friendships.value = _friendshipList;
+            _loadFriendDetails(currentUserId, _friendshipList);
+          });
+    }
+  }
 }
