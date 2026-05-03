@@ -18,7 +18,9 @@ class MainView extends GetView<MainController> {
           Container(color: Colors.red), // HomeView(),
           Container(color: Colors.green), // FriendsView(),
           FindPeopleView(), // UsersListView(),
-          ProfileView(), // ProfileView(),
+          ProfileView(),
+
+          // ProfileView(),
         ],
       ),
       bottomNavigationBar: Obx(
