@@ -102,4 +102,8 @@ class FriendsController extends GetxController {
       }).toList();
     }
   }
+
+  void updateSearchQuery(String query) {
+    _searchQuery.value = query;
+  }
 }
