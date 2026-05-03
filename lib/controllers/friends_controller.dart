@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
@@ -109,5 +110,12 @@ class FriendsController extends GetxController {
 
   void clearSearch() {
     _searchQuery.value = '';
+  }
+
+  Future<void> refreshFriends() async {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      _loadFriends();
+    }
   }
 }
