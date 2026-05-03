@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
@@ -51,10 +52,41 @@ class FriendsController extends GetxController {
 
       _friendshipsSubscriptions = _firestoreService
           .getFriendsStream(currentUserId)
-          .listen((_friendshipList) {
-            _friendships.value = _friendshipList;
-            _loadFriendDetails(currentUserId, _friendshipList);
+          .listen((friendshipList) {
+            _friendships.value = friendshipList;
+            _loadFriendDetails(currentUserId, friendshipList);
           });
+    }
+  }
+
+  Future<void> _loadFriendDetails(
+    String currentUserId,
+    List<FriendshipModel> friendshipList,
+  ) async {
+    try {
+      _isLoading.value = true;
+
+      List<UserModel> friendUsers = [];
+
+      final futures = friendshipList.map((friendship) async {
+        String friendId = friendship.getOtherUserId(currentUserId);
+        return await _firestoreService.getUserById(friendId);
+      }).toList();
+
+      final results = await Future.wait(futures);
+
+      for (var friend in results) {
+        if (friend != null) {
+          friendUsers.add(friend);
+        }
+      }
+
+      _friends.value = friendUsers;
+      _filterFriends();
+    } catch (e) {
+      _error.value = e.toString();
+    } finally {
+      _isLoading.value = false;
     }
   }
 }
