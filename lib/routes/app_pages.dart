@@ -1,13 +1,17 @@
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
+import 'package:flutter_firebase_getx_chat/views/find_people_view.dart';
 import 'package:flutter_firebase_getx_chat/views/main_view.dart';
 import 'package:flutter_firebase_getx_chat/views/profile/profile_view.dart';
 import 'package:get/get.dart';
 import '../controllers/change_password_controller.dart';
+import '../controllers/friends_controller.dart';
 import '../controllers/main_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/users_list_controller.dart';
 import '../views/auth/forgot_password_view.dart';
 import '../views/auth/login_view.dart';
 import '../views/auth/register_view.dart';
+import '../views/friends_view.dart';
 import '../views/profile/change_password_view.dart';
 import '../views/splash_view.dart';
 
@@ -52,12 +56,21 @@ class AppPages {
 
     // GetPage(name: AppRoutes.chat, page: () => const ChatView(), bindings: BindingsBuilder((){
     // Get.put(ChatController());})),
+    GetPage(
+      name: AppRoutes.usersList,
+      page: () => const FindPeopleView(),
+      binding: BindingsBuilder(() {
+        Get.put(UsersListController());
+      }),
+    ),
 
-    // GetPage(name: AppRoutes.usersList, page: () => const UsersListView(), bindings: BindingsBuilder((){
-    // Get.put(UsersListController());})),
-
-    // GetPage(name: AppRoutes.friends, page: () => const FriendsView(), bindings: BindingsBuilder((){
-    // Get.put(FriendsController());})),
+    GetPage(
+      name: AppRoutes.friends,
+      page: () => const FriendsView(),
+      binding: BindingsBuilder(() {
+        Get.put(FriendsController());
+      }),
+    ),
 
     // GetPage(name: AppRoutes.friendRequests, page: () => const FriendRequestsView(), bindings: BindingsBuilder((){
     // Get.put(FriendRequestsController());})),

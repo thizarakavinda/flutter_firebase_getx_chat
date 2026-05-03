@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_firebase_getx_chat/controllers/profile_controller.dart';
 import 'package:get/get.dart';
 
+import 'friends_controller.dart';
 import 'users_list_controller.dart';
 
 class MainController extends GetxController {
@@ -16,7 +17,7 @@ class MainController extends GetxController {
     super.onInit();
 
     // Get.lazyPut(() => HomeController());
-    // Get.lazyPut(() => FriendsController());
+    Get.lazyPut(() => FriendsController());
     Get.lazyPut(() => UsersListController());
     Get.lazyPut(() => ProfileController());
   }
