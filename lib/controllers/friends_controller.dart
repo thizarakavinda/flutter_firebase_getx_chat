@@ -89,4 +89,17 @@ class FriendsController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  void _filterFriends() {
+    final query = _searchQuery.value.toLowerCase();
+
+    if (query.isEmpty) {
+      _filteredFriends.value = _friends;
+    } else {
+      _filteredFriends.value = _friends.where((friend) {
+        return friend.displayName.toLowerCase().contains(query) ||
+            friend.email.toLowerCase().contains(query);
+      }).toList();
+    }
+  }
 }
