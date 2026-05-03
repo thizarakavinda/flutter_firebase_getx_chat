@@ -106,4 +106,8 @@ class FriendsController extends GetxController {
   void updateSearchQuery(String query) {
     _searchQuery.value = query;
   }
+
+  void clearSearch() {
+    _searchQuery.value = '';
+  }
 }
