@@ -37,4 +37,10 @@ class FriendsController extends GetxController {
       time: Duration(milliseconds: 300),
     );
   }
+
+  @override
+  void onClose() {
+    _friendshipsSubscriptions?.cancel();
+    super.onClose();
+  }
 }
