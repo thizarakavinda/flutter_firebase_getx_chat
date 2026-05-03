@@ -8,6 +8,7 @@ import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 class FriendsController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -158,11 +159,63 @@ class FriendsController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Failed to remove friend: ${e.toString()}',
+        'Failed to remove this friend. Please try again.',
         backgroundColor: Colors.red.withOpacity(0.1),
         colorText: Colors.red,
         duration: Duration(seconds: 4),
       );
+
+      Logger().e('Error removing friend: $e');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> blocFriend(UserModel friend) async {
+    try {
+      final result = await Get.dialog<bool>(
+        AlertDialog(
+          title: Text('Block User'),
+          content: Text(
+            'Are you sure you want to block ${friend.displayName}? This will remove them from your friends list and prevent them from contacting you.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+              child: Text('Block'),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        final currentUserId = _authController.user?.uid;
+        if (currentUserId != null) {
+          await _firestoreService.blockUser(currentUserId, friend.id);
+          Get.snackbar(
+            'User Blocked',
+            '${friend.displayName} has been blocked and removed from your friends list.',
+            backgroundColor: Colors.green.withOpacity(0.1),
+            colorText: Colors.green,
+            duration: Duration(seconds: 4),
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to block this user. Please try again.',
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+        duration: Duration(seconds: 4),
+      );
+
+      Logger().e('Error blocking user: $e');
     } finally {
       _isLoading.value = false;
     }
