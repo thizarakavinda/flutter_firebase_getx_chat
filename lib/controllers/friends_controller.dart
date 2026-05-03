@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friendship_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
+import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -216,6 +217,32 @@ class FriendsController extends GetxController {
       );
 
       Logger().e('Error blocking user: $e');
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
+  Future<void> startChat(UserModel friend) async {
+    try {
+      _isLoading.value = true;
+      final currentUserId = _authController.user?.uid;
+
+      if (currentUserId != null) {
+        Get.toNamed(
+          AppRoutes.chat,
+          arguments: {'chatId': null, 'otherUser': friend, 'isNewChat': true},
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to start chat. Please try again.',
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+        duration: Duration(seconds: 4),
+      );
+
+      Logger().e('Error starting chat: $e');
     } finally {
       _isLoading.value = false;
     }
