@@ -25,4 +25,16 @@ class FriendsController extends GetxController {
   bool get isLoading => _isLoading.value;
   String get error => _error.value;
   String get searchQuery => _searchQuery.value;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadFriends();
+
+    debounce(
+      _searchQuery,
+      (_) => _filteredFriends(),
+      time: Duration(milliseconds: 300),
+    );
+  }
 }
