@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
+import 'package:logger/web.dart';
 
 class FriendRequestsController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -56,5 +58,25 @@ class FriendRequestsController extends GetxController {
 
   void changeTab(int index) {
     _selectedTabIndex.value = index;
+  }
+
+  UserModel? getUser(String userId) {
+    return _users[userId];
+  }
+
+  Future<void> acceptRequest(FriendRequestModel request) async {
+    try {
+      _isLoading.value = true;
+      await _firestoreService.respondToFriendRequest(
+        request.id,
+        FriendRequestStatus.accepted,
+      );
+      Get.snackbar('Success', 'Friend request accepted');
+    } catch (error) {
+      Logger().e('Error accepting friend request: $error');
+      _error.value = 'Failed to accept friend request';
+    } finally {
+      _isLoading.value = false;
+    }
   }
 }
