@@ -79,5 +79,21 @@ class FriendRequestsController extends GetxController {
     }
   }
 
+  Future<void> declineFriendRequest(FriendRequestModel request) async {
+    try {
+      _isLoading.value = true;
+      await _firestoreService.respondToFriendRequest(
+        request.id,
+        FriendRequestStatus.rejected,
+      );
+      Get.snackbar('Success', 'Friend request declined');
+    } catch (error) {
+      Logger().e('Error declining friend request: $error');
+      _error.value = 'Failed to decline friend request';
+    } finally {
+      _isLoading.value = false;
+    }
+  }
+
   
 }
