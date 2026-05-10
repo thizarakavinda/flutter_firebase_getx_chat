@@ -124,4 +124,15 @@ class FriendRequestsController extends GetxController {
       return '${createdAt.day}/${createdAt.month}/${createdAt.year}';
     }
   }
+
+  String getStatusText(FriendRequestStatus status) {
+    switch (status) {
+      case FriendRequestStatus.pending:
+        return 'Pending';
+      case FriendRequestStatus.accepted:
+        return 'Accepted';
+      case FriendRequestStatus.rejected:
+        return 'Declined';
+    }
+  }
 }
