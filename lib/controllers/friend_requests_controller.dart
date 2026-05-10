@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
@@ -133,6 +134,17 @@ class FriendRequestsController extends GetxController {
         return 'Accepted';
       case FriendRequestStatus.rejected:
         return 'Declined';
+    }
+  }
+
+  Color getStatusColor(FriendRequestStatus status) {
+    switch (status) {
+      case FriendRequestStatus.pending:
+        return Colors.orange;
+      case FriendRequestStatus.accepted:
+        return Colors.green;
+      case FriendRequestStatus.rejected:
+        return Colors.redAccent;
     }
   }
 }
