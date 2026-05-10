@@ -41,4 +41,16 @@ class FriendRequestsController extends GetxController {
       );
     }
   }
+
+  void _loadUsers() {
+    _users.bindStream(
+      _firestoreService.getAllUserStream().map((userList) {
+        Map<String, UserModel> userMap = {};
+        for (var user in userList) {
+          userMap[user.id] = user;
+        }
+        return userMap;
+      }),
+    );
+  }
 }
