@@ -147,4 +147,8 @@ class FriendRequestsController extends GetxController {
         return Colors.redAccent;
     }
   }
+
+  void clearError() {
+    _error.value = '';
+  }
 }
