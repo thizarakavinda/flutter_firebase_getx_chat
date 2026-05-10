@@ -53,4 +53,8 @@ class FriendRequestsController extends GetxController {
       }),
     );
   }
+
+  void changeTab(int index) {
+    _selectedTabIndex.value = index;
+  }
 }
