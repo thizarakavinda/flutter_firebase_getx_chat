@@ -95,5 +95,16 @@ class FriendRequestsController extends GetxController {
     }
   }
 
-  
+  Future<void> unblockUser(String userId) async {
+    try {
+      _isLoading.value = true;
+      await _firestoreService.unblockUser(_authController.user!.uid, userId);
+      Get.snackbar('Success', 'User unblocked');
+    } catch (error) {
+      Logger().e('Error unblocking user: $error');
+      _error.value = 'Failed to unblock user';
+    } finally {
+      _isLoading.value = false;
+    }
+  }
 }
