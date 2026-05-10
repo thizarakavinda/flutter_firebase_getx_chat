@@ -28,5 +28,16 @@ class FriendRequestsController extends GetxController {
     _loadFriendRequests();
   }
 
-  void _loadFriendRequests(){}
+  void _loadFriendRequests() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      _receivedRequests.bindStream(
+        _firestoreService.getFriendRequestsStream(currentUserId),
+      );
+
+      _sentRequests.bindStream(
+        _firestoreService.getFriendRequestsStream(currentUserId),
+      );
+    }
+  }
 }
