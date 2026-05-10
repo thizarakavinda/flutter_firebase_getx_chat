@@ -24,8 +24,9 @@ class FriendRequestsController extends GetxController {
 
   @override
   void onInit() {
-    
     super.onInit();
     _loadFriendRequests();
   }
+
+  void _loadFriendRequests(){}
 }
