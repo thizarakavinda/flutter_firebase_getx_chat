@@ -4,6 +4,7 @@ import 'package:flutter_firebase_getx_chat/views/main_view.dart';
 import 'package:flutter_firebase_getx_chat/views/profile/profile_view.dart';
 import 'package:get/get.dart';
 import '../controllers/change_password_controller.dart';
+import '../controllers/friend_requests_controller.dart';
 import '../controllers/friends_controller.dart';
 import '../controllers/main_controller.dart';
 import '../controllers/profile_controller.dart';
@@ -11,6 +12,7 @@ import '../controllers/users_list_controller.dart';
 import '../views/auth/forgot_password_view.dart';
 import '../views/auth/login_view.dart';
 import '../views/auth/register_view.dart';
+import '../views/friend_requests_view.dart';
 import '../views/friends_view.dart';
 import '../views/profile/change_password_view.dart';
 import '../views/splash_view.dart';
@@ -72,8 +74,13 @@ class AppPages {
       }),
     ),
 
-    // GetPage(name: AppRoutes.friendRequests, page: () => const FriendRequestsView(), bindings: BindingsBuilder((){
-    // Get.put(FriendRequestsController());})),
+    GetPage(
+      name: AppRoutes.friendRequests,
+      page: () => const FriendRequestsView(),
+      binding: BindingsBuilder(() {
+        Get.put(FriendRequestsController());
+      }),
+    ),
 
     // GetPage(name: AppRoutes.notifications, page: () => const NotificationsView(), bindings: BindingsBuilder((){
     // Get.put(NotificationsController());})),

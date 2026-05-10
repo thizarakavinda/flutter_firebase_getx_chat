@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
-
 import '../controllers/friends_controller.dart';
 import 'widgets/friend_list_item.dart';
 
