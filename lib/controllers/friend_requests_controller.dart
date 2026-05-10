@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
@@ -79,4 +78,6 @@ class FriendRequestsController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  
 }
