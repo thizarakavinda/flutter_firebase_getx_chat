@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/models/friend_request_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
+import 'package:flutter_firebase_getx_chat/theme/app_theme.dart';
 
 class FriendRequestItem extends StatelessWidget {
   final FriendRequestModel request;
@@ -25,6 +26,22 @@ class FriendRequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Card(
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundColor: AppTheme.primaryColor,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

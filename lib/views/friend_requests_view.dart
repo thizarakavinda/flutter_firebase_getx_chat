@@ -115,6 +115,7 @@ class FriendRequestsView extends GetView<FriendRequestsController> {
           Expanded(
             child: Obx(() {
               return IndexedStack(
+                index: controller.selectedTabIndex,
                 children: [
                   _buildReceivedRequestsTab(),
                   _buildSentRequestsTab(),
@@ -136,6 +137,7 @@ class FriendRequestsView extends GetView<FriendRequestsController> {
           subtitle: 'You have no pending friend requests at the moment.',
         );
       }
+
       return ListView.separated(
         padding: EdgeInsets.all(16),
         itemCount: controller.receivedRequests.length,
@@ -168,6 +170,7 @@ class FriendRequestsView extends GetView<FriendRequestsController> {
           subtitle: 'You have not sent any friend requests at the moment.',
         );
       }
+
       return ListView.separated(
         padding: EdgeInsets.all(16),
         itemCount: controller.sentRequests.length,
