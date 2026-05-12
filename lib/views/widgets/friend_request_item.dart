@@ -69,11 +69,125 @@ class FriendRequestItem extends StatelessWidget {
                           ),
                         ),
                 ),
+
+                SizedBox(width: 12),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              user.displayName,
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          Text(
+                            timeText,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: AppTheme.textSecondaryColor),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 2),
+
+                      Text(
+                        user.email,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.textSecondaryColor,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+
+            if (isReceived &&
+                request.status == FriendRequestStatus.pending) ...[
+              SizedBox(height: 16),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onDecline,
+                      label: Text('Decline'),
+                      icon: Icon(Icons.close),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppTheme.errorColor),
+                        foregroundColor: AppTheme.errorColor,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 12),
+
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onAccept,
+                      label: Text('Accept'),
+                      icon: Icon(Icons.check),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppTheme.successColor),
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppTheme.successColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ] else if (!isReceived && statusText != null) ...[
+              SizedBox(height: 12),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: statusColor?.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: statusColor ?? AppTheme.borderColor,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(_getStatusIcon(), color: statusColor, size: 16),
+                    SizedBox(width: 6),
+                    Text(
+                      statusText!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: statusColor ?? AppTheme.textSecondaryColor,
+
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  IconData _getStatusIcon() {
+    switch (request.status) {
+      case FriendRequestStatus.pending:
+        return Icons.hourglass_top;
+      case FriendRequestStatus.accepted:
+        return Icons.check_circle;
+      case FriendRequestStatus.rejected:
+        return Icons.cancel;
+    }
   }
 }
