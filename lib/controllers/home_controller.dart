@@ -215,4 +215,9 @@ class HomeController extends GetxController {
       );
     });
   }
+
+  void _clearSearch() {
+    _isSearching.value = false;
+    _filteredChats.clear();
+  }
 }
