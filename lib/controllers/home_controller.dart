@@ -121,4 +121,12 @@ class HomeController extends GetxController {
         return baseList;
     }
   }
+
+  List<ChatModel> _applyUnreadFilter(List<ChatModel> chats) {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId == null) return [];
+    return chats
+        .where((chat) => chat.getUnreadCount(currentUserId) > 0)
+        .toList();
+  }
 }
