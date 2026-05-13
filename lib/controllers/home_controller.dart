@@ -43,7 +43,7 @@ class HomeController extends GetxController {
   void _loadChats() {
     final currentUserId = _authController.user?.uid;
     if (currentUserId != null) {
-      _allChats.bindStream(_firestoreService.getUserChatStream(currentUserId));
+      _allChats.bindStream(_firestoreService.getUserChatsStream(currentUserId));
     }
   }
 }
