@@ -139,5 +139,12 @@ class HomeController extends GetxController {
     }).toList();
   }
 
-  
+  List<ChatModel> _applyActiveFilter(List<ChatModel> chats) {
+    final now = DateTime.now();
+    final oneWeekAgo = now.subtract(Duration(days: 7));
+    return chats.where((chat) {
+      if (chat.lastMessageTime == null) return false;
+      return chat.lastMessageTime!.isAfter(oneWeekAgo);
+    }).toList();
+  }
 }
