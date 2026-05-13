@@ -70,4 +70,13 @@ class HomeController extends GetxController {
       }),
     );
   }
+
+  void _loadNotifications() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      _notifications.bindStream(
+        _firestoreService.getNotificationsStream(currentUserId),
+      );
+    }
+  }
 }
