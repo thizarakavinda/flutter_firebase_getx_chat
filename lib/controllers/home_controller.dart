@@ -106,4 +106,19 @@ class HomeController extends GetxController {
       return '${time.month}/${time.day}/${time.year}';
     }
   }
+
+  List<ChatModel> _getFilteredChats() {
+    List<ChatModel> baseList = _isSearching.value ? _filteredChats : _allChats;
+    switch (_activeFilter.value) {
+      case 'Unread':
+        return _applyUnreadFilter(baseList);
+      case 'Recent':
+        return _applyRecentFilter(baseList);
+      case 'Active':
+        return _applyActiveFilter(baseList);
+      case 'All':
+      default:
+        return baseList;
+    }
+  }
 }
