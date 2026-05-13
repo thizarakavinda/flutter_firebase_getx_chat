@@ -192,5 +192,27 @@ class HomeController extends GetxController {
 
       return displayNameMatch || emailMatch || lastMessageMatch;
     }).toList();
+
+    _sortSearchResults(lowerCaseQuery);
+  }
+
+  void _sortSearchResults(String query) {
+    _filteredChats.sort((a, b) {
+      final userA = getOtherUser(a);
+      final userB = getOtherUser(b);
+
+      if (userA == null || userB == null) return 0;
+
+      final exactMatchA = userA.displayName.toLowerCase().startsWith(query);
+
+      final exactMatchB = userB.displayName.toLowerCase().startsWith(query);
+
+      if (exactMatchA && !exactMatchB) return -1;
+      if (!exactMatchA && exactMatchB) return 1;
+
+      return (b.lastMessageTime ?? DateTime(0)).compareTo(
+        a.lastMessageTime ?? DateTime(0),
+      );
+    });
   }
 }
