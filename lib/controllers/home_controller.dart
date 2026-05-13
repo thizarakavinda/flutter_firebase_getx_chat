@@ -147,4 +147,17 @@ class HomeController extends GetxController {
       return chat.lastMessageTime!.isAfter(oneWeekAgo);
     }).toList();
   }
+
+  void setFilter(String filterType) {
+    _activeFilter.value = filterType;
+
+    if (filterType == 'All') {
+      if (_searchQuery.value.isEmpty) {
+        _isSearching.value = false;
+        _filteredChats.clear();
+      }
+    }
+  }
+
+  
 }
