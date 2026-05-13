@@ -44,6 +44,18 @@ class HomeController extends GetxController {
     final currentUserId = _authController.user?.uid;
     if (currentUserId != null) {
       _allChats.bindStream(_firestoreService.getUserChatsStream(currentUserId));
+
+      ever(_allChats, (_) {
+        if (_isSearching.value && _searchQuery.value.isNotEmpty) {
+          _performSearch(_searchQuery.value);
+        }
+      });
+
+      ever(_activeFilter, (_) {
+        if (_searchQuery.value.isNotEmpty) {
+          _performSearch(_searchQuery.value);
+        }
+      });
     }
   }
 }
