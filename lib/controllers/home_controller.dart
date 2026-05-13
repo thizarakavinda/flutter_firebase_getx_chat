@@ -79,4 +79,13 @@ class HomeController extends GetxController {
       );
     }
   }
+
+  UserModel? getOtherUser(ChatModel chat) {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      final otherUserId = chat.getOtherParticipant(currentUserId);
+      return _users[otherUserId];
+    }
+    return null;
+  }
 }
