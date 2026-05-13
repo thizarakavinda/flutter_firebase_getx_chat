@@ -159,5 +159,11 @@ class HomeController extends GetxController {
     }
   }
 
+  void clearAllFilters() {
+    _activeFilter.value = 'All';
+    _clearSearch();
+   
+  }
+
   
 }
