@@ -162,7 +162,16 @@ class HomeController extends GetxController {
   void clearAllFilters() {
     _activeFilter.value = 'All';
     _clearSearch();
-   
+  }
+
+  void onSearchChanged(String query) {
+    _searchQuery.value = query;
+    if (query.isEmpty) {
+      _clearSearch();
+    } else {
+      _isSearching.value = true;
+      _performSearch(query);
+    }
   }
 
   
