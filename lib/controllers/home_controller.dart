@@ -174,5 +174,23 @@ class HomeController extends GetxController {
     }
   }
 
-  
+  void _performSearch(String query) {
+    final lowerCaseQuery = query.toLowerCase().trim();
+
+    _filteredChats.value = _allChats.where((chat) {
+      final otherUser = getOtherUser(chat);
+      if (otherUser == null) return false;
+
+      final displayNameMatch = otherUser.displayName.toLowerCase().contains(
+        lowerCaseQuery,
+      );
+
+      final emailMatch = otherUser.email.toLowerCase().contains(lowerCaseQuery);
+
+      final lastMessageMatch =
+          chat.lastMessage?.toLowerCase().contains(lowerCaseQuery) ?? false;
+
+      return displayNameMatch || emailMatch || lastMessageMatch;
+    }).toList();
+  }
 }
