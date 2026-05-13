@@ -129,4 +129,15 @@ class HomeController extends GetxController {
         .where((chat) => chat.getUnreadCount(currentUserId) > 0)
         .toList();
   }
+
+  List<ChatModel> _applyRecentFilter(List<ChatModel> chats) {
+    final now = DateTime.now();
+    final threeDaysAgo = now.subtract(Duration(days: 3));
+    return chats.where((chat) {
+      if (chat.lastMessageTime == null) return false;
+      return chat.lastMessageTime!.isAfter(threeDaysAgo);
+    }).toList();
+  }
+
+  
 }
