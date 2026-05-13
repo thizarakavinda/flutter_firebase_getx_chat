@@ -20,5 +20,18 @@ class HomeController extends GetxController {
   final RxString _searchQuery = ''.obs;
   final RxBool _isSearching = false.obs;
   final RxString _activeFilter = 'All'.obs;
+
+  List<ChatModel> get chats => _getFilteredChats();
+  List<ChatModel> get allChats => _allChats;
+  List<ChatModel> get filteredChats => _filteredChats;
+  List<NotificationModel> get notifications => _notifications;
+  bool get isLoading => _isLoading.value;
+  String get error => _error.value;
+  String get searchQuery => _searchQuery.value;
+  bool get isSearching => _isSearching.value;
+  String get activeFilter => _activeFilter.value;
+  Map<String, UserModel> get users => _users;
+
+  
  
 }
