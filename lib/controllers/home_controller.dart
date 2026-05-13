@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import '../models/notification_model.dart';
 
 class HomeController extends GetxController {
-
   final FirebaseFirestore _firestoreService = FirebaseFirestore.instance;
   final AuthController _authController = Get.find<AuthController>();
 
@@ -32,6 +31,14 @@ class HomeController extends GetxController {
   String get activeFilter => _activeFilter.value;
   Map<String, UserModel> get users => _users;
 
+  @override
+  void onInit() {
+    super.onInit();
+
+    _loadChats();
+    _loadUsers();
+    _loadNotifications();
+  }
+
   
- 
 }
