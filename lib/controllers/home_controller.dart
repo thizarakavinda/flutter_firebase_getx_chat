@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
+import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 
 import '../models/notification_model.dart';
 
 class HomeController extends GetxController {
-  final FirebaseFirestore _firestoreService = FirebaseFirestore.instance;
+  final FirestoreService _firestoreService = FirestoreService();
   final AuthController _authController = Get.find<AuthController>();
 
   final RxList<ChatModel> _allChats = <ChatModel>[].obs;
@@ -40,5 +40,10 @@ class HomeController extends GetxController {
     _loadNotifications();
   }
 
-  
+  void _loadChats() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId != null) {
+      _allChats.bindStream(_firestoreService.getUserChatStream(currentUserId));
+    }
+  }
 }
