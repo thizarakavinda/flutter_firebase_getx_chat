@@ -229,6 +229,10 @@ class HomeController extends GetxController {
     onSearchChanged(message);
   }
 
+  List<ChatModel> getUnreadChats(){
+    return _applyUnreadFilter(chats);
+  }
+
   
 
  
