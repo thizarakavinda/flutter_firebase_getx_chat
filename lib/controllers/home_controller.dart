@@ -309,4 +309,15 @@ class HomeController extends GetxController {
       _isLoading.value = false;
     }
   }
+
+  int getTotalUnreadCount() {
+    final currentUserId = _authController.user?.uid;
+    if (currentUserId == null) return 0;
+
+    int total = 0;
+    for (var chat in _allChats) {
+      total += chat.getUnreadCount(currentUserId);
+    }
+    return total;
+  }
 }
