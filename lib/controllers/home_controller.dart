@@ -1,6 +1,7 @@
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
+import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
 
@@ -271,5 +272,15 @@ class HomeController extends GetxController {
       }
     }
     return suggestions.toSet().toList();
+  }
+
+  void openChat(ChatModel chat) {
+    final otherUser = getOtherUser(chat);
+    if (otherUser != null) {
+      Get.toNamed(
+        AppRoutes.chat,
+        arguments: {'chatId': chat.id, 'otherUser': otherUser},
+      );
+    }
   }
 }
