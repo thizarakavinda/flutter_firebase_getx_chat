@@ -220,4 +220,10 @@ class HomeController extends GetxController {
     _isSearching.value = false;
     _filteredChats.clear();
   }
+
+  void searchByUserName(String name){
+    onSearchChanged(name);
+  }
+
+  
 }
