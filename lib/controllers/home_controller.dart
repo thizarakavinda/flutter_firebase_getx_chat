@@ -230,7 +230,11 @@ class HomeController extends GetxController {
   }
 
   List<ChatModel> getUnreadChats(){
-    return _applyUnreadFilter(chats);
+    return _applyUnreadFilter(_allChats);
+  }
+
+  List<ChatModel> getActiveChats(){
+    return _applyActiveFilter(_allChats);
   }
 
   
