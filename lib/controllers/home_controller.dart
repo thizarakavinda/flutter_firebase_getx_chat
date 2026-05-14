@@ -287,4 +287,8 @@ class HomeController extends GetxController {
   void openFriends() {
     Get.toNamed(AppRoutes.friends);
   }
+
+  void openNotifications() {
+    Get.toNamed(AppRoutes.notifications);
+  }
 }
