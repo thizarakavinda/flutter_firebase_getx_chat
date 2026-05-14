@@ -221,23 +221,31 @@ class HomeController extends GetxController {
     _filteredChats.clear();
   }
 
- void searchByUserName(String name){
+  void searchByUserName(String name) {
     onSearchChanged(name);
   }
 
-  void searchByLastMessage(String message){
+  void searchByLastMessage(String message) {
     onSearchChanged(message);
   }
 
-  List<ChatModel> getUnreadChats(){
+  List<ChatModel> getUnreadChats() {
     return _applyUnreadFilter(_allChats);
   }
 
-  List<ChatModel> getActiveChats(){
+  List<ChatModel> getActiveChats() {
     return _applyActiveFilter(_allChats);
   }
 
-  
+  List<ChatModel> getRecentChats({int limit = 10}) {
+    final recentChats = _applyRecentFilter(_allChats);
 
- 
+    final sortedChats = List<ChatModel>.from(recentChats);
+    sortedChats.sort((a, b) {
+      return (b.lastMessageTime ?? DateTime(0)).compareTo(
+        a.lastMessageTime ?? DateTime(0),
+      );
+    });
+    return sortedChats.take(limit).toList();
+  }
 }
