@@ -320,4 +320,10 @@ class HomeController extends GetxController {
     }
     return total;
   }
+
+  int getUnreadNotificationsCount() {
+    return _notifications.where((notif) => !notif.isRead).length;
+  }
+
+  
 }
