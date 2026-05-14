@@ -221,9 +221,15 @@ class HomeController extends GetxController {
     _filteredChats.clear();
   }
 
-  void searchByUserName(String name){
+ void searchByUserName(String name){
     onSearchChanged(name);
   }
 
+  void searchByLastMessage(String message){
+    onSearchChanged(message);
+  }
+
   
+
+ 
 }
