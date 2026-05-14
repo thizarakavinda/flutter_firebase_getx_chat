@@ -253,11 +253,23 @@ class HomeController extends GetxController {
     return getUnreadChats().length;
   }
 
-  int getRecentCount(){
-    return _applyRecentFilter(_allChats).length; 
+  int getRecentCount() {
+    return _applyRecentFilter(_allChats).length;
   }
 
-  int getActiveCount(){
+  int getActiveCount() {
     return getActiveChats().length;
+  }
+
+  List<String> getSearchSuggestions() {
+    final suggestions = <String>[];
+
+    for (var chat in _allChats) {
+      final otherUser = getOtherUser(chat);
+      if (otherUser?.displayName != null) {
+        suggestions.add(otherUser!.displayName);
+      }
+    }
+    return suggestions.toSet().toList();
   }
 }
