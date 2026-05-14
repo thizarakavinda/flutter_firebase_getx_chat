@@ -369,4 +369,13 @@ class HomeController extends GetxController {
       );
     }
   }
+
+  void clearError() {
+    _error.value = '';
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+  }
 }
