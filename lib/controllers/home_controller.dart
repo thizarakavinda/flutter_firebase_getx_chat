@@ -249,5 +249,7 @@ class HomeController extends GetxController {
     return sortedChats.take(limit).toList();
   }
 
-  
+  int getUnreadCount() {
+    return getUnreadChats().length;
+  }
 }
