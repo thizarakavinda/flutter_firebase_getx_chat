@@ -4,6 +4,8 @@ import 'package:flutter_firebase_getx_chat/models/user_model.dart';
 import 'package:flutter_firebase_getx_chat/routes/app_routes.dart';
 import 'package:flutter_firebase_getx_chat/services/firestore_service.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:logger/logger.dart';
 
 import '../models/notification_model.dart';
 
@@ -290,5 +292,21 @@ class HomeController extends GetxController {
 
   void openNotifications() {
     Get.toNamed(AppRoutes.notifications);
+  }
+
+  Future<void> refreshChats() async {
+    _isLoading.value = true;
+    try {
+      await Future.delayed(Duration(seconds: 1));
+
+      if (_isSearching.value && _searchQuery.value.isNotEmpty) {
+        _performSearch(_searchQuery.value);
+      }
+    } catch (e) {
+      _error.value = 'Failed to refresh chats';
+      Logger().e('Error refreshing chats: $e');
+    } finally {
+      _isLoading.value = false;
+    }
   }
 }
