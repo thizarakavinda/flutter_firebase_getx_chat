@@ -252,4 +252,10 @@ class HomeController extends GetxController {
   int getUnreadCount() {
     return getUnreadChats().length;
   }
+
+  int getRecentCount(){
+    return _applyRecentFilter(_allChats).length; 
+  }
+
+  
 }
