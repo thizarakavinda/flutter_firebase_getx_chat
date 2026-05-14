@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_firebase_getx_chat/controllers/auth_controller.dart';
 import 'package:flutter_firebase_getx_chat/models/chat_model.dart';
 import 'package:flutter_firebase_getx_chat/models/user_model.dart';
@@ -325,5 +326,47 @@ class HomeController extends GetxController {
     return _notifications.where((notif) => !notif.isRead).length;
   }
 
-  
+  Future<void> deleteChat(ChatModel chat) async {
+    try {
+      final currentUserId = _authController.user?.uid;
+      if (currentUserId == null) return;
+
+      final otherUser = getOtherUser(chat);
+
+      final result = await Get.dialog<bool>(
+        AlertDialog(
+          title: Text('Delete Chat'),
+          content: Text(
+            'Are you sure you want to delete the chat with ${otherUser?.displayName ?? 'this user'}? This action cannot be undone.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              child: Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        await _firestoreService.deleteChatForUser(chat.id, currentUserId);
+        Get.snackbar(
+          'Chat Deleted',
+          'The chat has been deleted successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Logger().e('Error deleting chat: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to delete the chat. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
 }
