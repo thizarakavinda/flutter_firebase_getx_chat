@@ -257,5 +257,7 @@ class HomeController extends GetxController {
     return _applyRecentFilter(_allChats).length; 
   }
 
-  
+  int getActiveCount(){
+    return _applyActiveFilter(_allChats).length; 
+  }
 }
